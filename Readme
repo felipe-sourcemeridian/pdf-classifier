@@ -1,0 +1,24 @@
+Set Up Development Enviroment Debian
+apt-get install binutils
+Install ICU library
+apt-get install libicu-dev
+Install GLIB2
+apt-get install libglib2.0-dev
+Development Enviroment
+	Compile Project:
+		make
+	Clean Build Files
+		make clean
+	Run Classifier
+		./classifier classifier.conf
+Server Tools
+The Server Tools is script for testing the server functionality
+the directory for this tools is server_tools on the development tree
+	classifier_client.py:
+		This Application is for testing the classifier server for more information execute ./classifier_client.py -h
+Classifier Logs:
+	When daemon start you can see the logs with the command tail -f /var/logs/syslog
+Serilize Tools:
+	This Tools is for serializer the text files, you can find this tools on the directory serialize_tools on the development directory
+	serialize_file.py:
+		for the option and help execute the next command for help ./serialize_tools.py -h
