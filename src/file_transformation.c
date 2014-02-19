@@ -88,7 +88,7 @@ int word_to_number(file_transformation *_file_transformation,char_buffer *_buffe
 	}
 	if(!IS_LETTER(_buffer->buffer[0]))
 	{
-		_i=1;	
+		_i = 1;	
 	}
 	_size=_buffer->size;	
 	for(;_i<_size;_i++)

@@ -4,6 +4,7 @@
 #include "state_aho.h"
 #include "glib.h"
 #include "load_files.h"
+#include "syslog.h"
 typedef struct
 {
 	GHashTable *map_title;

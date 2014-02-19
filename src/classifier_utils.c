@@ -149,16 +149,20 @@ classifier_document *create_classifier_document(memory_page_buffer **_buffer)
 {
 	classifier_document *_classifier_document=(classifier_document *)malloc(sizeof(classifier_document));
 	node_score_buffer *_node_score_buffer=NULL;
+	
 	if(_classifier_document==NULL)
 	{
 		return NULL;
 	}
+	
 	if(create_classifier_maps(_classifier_document)<0)
 	{
 		free(_classifier_document);
 		return NULL;
 	}
+	
 	_node_score_buffer=create_node_score_buffer(_buffer);
+	
 	if(_node_score_buffer==NULL)
 	{
 		g_hash_table_destroy(_classifier_document->map_document);
@@ -167,6 +171,8 @@ classifier_document *create_classifier_document(memory_page_buffer **_buffer)
 		g_hash_table_destroy(_classifier_document->map_node);
 		g_hash_table_destroy(_classifier_document->map_tax_node);
 		free(_classifier_document);
+	
+		return NULL;
 	}
 	if(create_classifier_words_poll(_classifier_document,_buffer)<0)
 	{

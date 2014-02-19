@@ -60,7 +60,7 @@ char_buffer *create_char_buffer(memory_page_buffer **_page_buffer)
 	{
 		return NULL;
 	}
-	_page=create_memory_page_list(CHAR_POLL_MEMORY_SIZE,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,0);
+	_page=create_memory_page_list(CHAR_POLL_MEMORY_SIZE, PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,0);
 	if(_page==NULL)
 	{
 		free(_buffer);
@@ -123,13 +123,14 @@ node_score_buffer *create_node_score_buffer(memory_page_buffer **_buffer)
 	if(_node_score_buffer==NULL)
 	{
 		return NULL;
-	}
-	_page=create_memory_page_list(NODE_SCORE_POLL_MEMORY_SIZE,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,0);
-	if(_page==NULL)
+	}	
+	_page = create_memory_page_list(NODE_SCORE_POLL_MEMORY_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0);	
+	if(_page == NULL)
 	{
 		free(_node_score_buffer);
 		return NULL;
 	}
+	
 	*_buffer=add_page_to_buffer(*_buffer,_page);
 	_node_score_buffer->page=_page;
 	_node_score_buffer->page_buffer=*_buffer;

@@ -6,6 +6,7 @@
 #include <unicode/uenum.h>
 #include <unicode/ustring.h>
 #include <unicode/ustdio.h>
+#include <syslog.h>
 #define WORD_POLL_MEMORY_SIZE	PAGE_SIZE*5
 #define CHAR_POLL_MEMORY_SIZE	PAGE_SIZE*5
 #define NODE_SCORE_POLL_MEMORY_SIZE	PAGE_SIZE*5
@@ -52,6 +53,7 @@ typedef struct
 	uint32_t current_size;
 	uint32_t *words;
 }word_poll;
+
 typedef struct
 {
 	memory_page_buffer *page_buffer;
@@ -61,6 +63,7 @@ typedef struct
 	uint32_t offset;
 	uint32_t capacity;
 }char_buffer;
+
 typedef struct
 {
 	UChar *data;
@@ -68,6 +71,7 @@ typedef struct
 	int32_t capacity;
 	memory_page_list *page;	
 }u16_char_buffer;
+
 char_buffer *create_char_buffer(memory_page_buffer **_page_buffer);
 char_buffer *realloc_char_buffer(char_buffer *_buffer,uint32_t _new_size);
 void delete_char_buffer(char_buffer *_buffer);
