@@ -4,13 +4,19 @@ icuflags = $(shell icu-config --cflags --ldflags --ldflags-icuio)
 INCLUDE = include
 SRC = src
 CC = gcc -Wall -I $(INCLUDE)
-OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o file_server.o daemon_util.o config_util.o request_management.o
+OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o
+OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o memory_poll.o memory_management.o
 default: $(OBJS) 
 	$(CC) $(OBJS) $(SRC)/main.c -o classifier $(glibflags) $(icuflags) -std=gnu99
 	rm $(OBJS)
+linkapediaserver: $(OBJS_LINKAPEDIA_SERVER)
+	$(CC) $(OBJS_LINKAPEDIA_SERVER) $(SRC)/linkapediaserver.c -o linkapediaserver $(glibflags) $(icuflags) 
+	rm $(OBJS_LINKAPEDIA_SERVER)
+baseserver: fileserver.o
+	$(CC) fileserver.o $(SRC)/baseserver.c -o baseserver
+	rm fileserver.o
 trans.o: $(SRC)/trans.c $(INCLUDE)/trans.h
 	$(CC) -c $(SRC)/trans.c
-memory_management.o: $(INCLUDE)/memory_management.h $(SRC)/memory_management.c
 	$(CC) -c $(SRC)/memory_management.c 
 memory_poll.o: memory_management.o $(INCLUDE)/memory_poll.h $(SRC)/memory_poll.c
 	$(CC) -c $(SRC)/memory_poll.c
@@ -26,8 +32,6 @@ classifier.o: state_aho.o memory_poll.o
 	$(CC) -c $(SRC)/classifier.c -c $(glibflags)
 classifier_utils.o: $(INCLUDE)/memory_management.h $(SRC)/memory_management.c
 	$(CC)  -c $(SRC)/classifier_utils.c  $(glibflags)
-file_server.o: $(INCLUDE)/file_server.h $(SRC)/file_server.c
-	$(CC) -c $(SRC)/file_server.c $(glibflags)
 utility.o: config_util.o classifier.o state_aho.o $(INCLUDE)/utility.h
 	$(CC) -c  $(SRC)/utility.c $(glibflags)
 daemon_util.o: $(INCLUDE)/daemon_util.h $(SRC)/daemon_util.c
@@ -36,7 +40,20 @@ score_document.o: $(INCLUDE)/load_files.h memory_poll.o $(INCLUDE)/score_documen
 	$(CC) -c $(SRC)/score_document.c  $(glibflags)
 config_util.o: $(INCLUDE)/config_util.h $(SRC)/config_util.c
 	$(CC) -c $(SRC)/config_util.c $(glibflags)
-request_management.o: $(INCLUDE)/request_management.h $(SRC)/request_management.c
-	$(CC) -c $(SRC)/request_management.c $(glibflags) $(icuflags)
+fileserver.o: $(INCLUDE)/fileserver.h
+	$(CC) -c $(SRC)/fileserver.c -o fileserver.o
+
+parse.o: $(INCLUDE)/protocol.h $(INCLUDE)/classify_document_request_parse.h
+	$(CC) -c $(SRC)/classify_document_request_parse.c -o parse.o
+
+client_reader.o: $(INCLUDE)/client_reader.h
+	$(CC) -c $(SRC)/client_reader.c -o client_reader.o
+request_manager_builder.o: $(INCLUDE)/request_manager_builder.h $(INCLUDE)/request_manager.h
+	$(CC) -c $(SRC)/request_manager_builder.c -o request_manager_builder.o
+request_manager.o:
+	$(CC) -c $(SRC)/request_manager.c -o request_manager.o
+memory_management.o: $(INCLUDE)/memory_management.h $(SRC)/memory_management.c
+	$(CC) -c $(SRC)/memory_management.c -o memory_management.o
+
 clean:
 	rm classifier
