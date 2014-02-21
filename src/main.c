@@ -3,13 +3,14 @@
 #include "time.h"
 #include "request_manager.h"
 #include "request_manager_builder.h"
-
+#include "errno.h"
 #include "utility.h"
 #include "daemon_util.h"
 #include "config_util.h"
 #include "file_transformation.h"
 #include "classifier.h"
 #include "load_files.h"
+#include "unistd.h"
 
 #define SERVER_CONFIG "server"
 #define PORT	"port"
@@ -183,13 +184,17 @@ void onrequest_event(classifier_request *request, request_manager *manager, pack
 
 	if(request->header.packet_type == TITLE)
 	{
+		syslog(LOG_INFO,"request begin %d\n", request->fd);
 		request_data->classifier_document->title_size = request_data->word_poll->current_size;
 	}
 	else if(request->header.packet_type == END_REQUEST)
 	{
 		classify(request_data->classifier, request_data->classifier_document, request_data->word_poll);
+		syslog(LOG_INFO,"request end %d\n", request->fd);
 		write_request_reponse(request->fd, request_data);
+		sleep(10000);
 		close_and_clean_request(request, manager);
+		
 	}
 }
 
@@ -214,7 +219,8 @@ static void write_request_reponse(int fd, classifier_request_data *_request_clas
 		_node_score=_node_score_buffer->buffer[_i];	
 		sprintf(_data,FORMAT_RESPONSE,_node_score.node_id,_node_score.frequency,_node_score.coverage,_node_score.frequency_top,_node_score.coverage_top,_node_score.fc,_node_score.fc15,_node_score.fc20,_node_score.flags,_node_score.roc);
 		_write_bytes=write(fd,_data,strlen(_data));
-		if(_write_bytes<=0)
+		syslog(LOG_INFO, "fd: %d, bytes :%d, writes bytes :%d, data: %s", fd, strlen(_data), _write_bytes, _data);
+		if(_write_bytes <= 0)
 		{	
 			syslog(LOG_INFO,"error try to write response %s\n", strerror(errno));
 			return ;
@@ -232,6 +238,11 @@ static void close_and_clean_request(classifier_request *request, request_manager
 
 void onrequest_error(classifier_request *request, request_manager *manager, classifier_request_error error)
 {
+	syslog(LOG_ERR,"request begin %d %s\n", request->fd, get_error_description(error));
+	if(error == SOCKET)
+	{
+		syslog(LOG_ERR,"request error  %d\ %s n", request->fd, strerror(errno));
+	}
 	close_request_on_request_manager(request, manager);
 }
 
