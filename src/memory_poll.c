@@ -99,7 +99,7 @@ u16_char_buffer *create_u16_char_buffer(memory_page_buffer **_page_buffer)
 	{
 		return NULL;
 	}
-	_page=_page=create_memory_page_list(UCHAR_POLL_MEMORY_SIZE,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,0);
+	_page=create_memory_page_list(UCHAR_POLL_MEMORY_SIZE,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,0);
 	if(_page==NULL)
 	{
 		free(_buffer);

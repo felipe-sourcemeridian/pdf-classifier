@@ -70,24 +70,36 @@ int unregister_client_on_server(int client, file_server *server)
 	return epoll_ctl(server->epoll_fd, EPOLL_CTL_DEL, client, &dummy_watcher);
 }
 
-int process_events_on_server(file_server *server, EVENT_CALLBACK read_callback, EVENT_CALLBACK close_callback, int timeout)
+int process_events_on_server(file_server *server, EVENT_CALLBACK read_callback, EVENT_CALLBACK close_callback, EVENT_CALLBACK write_callback, int timeout)
 {
 	struct epoll_event *events = server->events;
 	int i;
 	int event_size = epoll_wait(server->epoll_fd, server->events, server->events_size, timeout);
+	uint32_t events_flags = 0;
 	if(event_size < -1)
 	{
 		return -1;
 	}
 	for(i=0; i < event_size; i++)
 	{
-		if(!IS_CLOSE_EVENT(events[i].events))
+		events_flags =events[i].events;
+		printf("is close event read hup %d\n",(events_flags & EPOLLRDHUP));
+		printf("is clsose event error %d\n",(events_flags & EPOLLERR));
+		printf("is clsoe event socket peer close %d\n",(events_flags & EPOLLHUP)); 
+		printf("is read event %d\n", events_flags & EPOLLIN);
+		printf("is write %d\n", events_flags & EPOLLOUT);
+
+		if(IS_CLOSE_EVENT(events_flags))
+		{
+			close_callback(events[i].data.ptr, server);
+		}
+		else if(IS_READY_READ_EVENT(events_flags))
 		{
 			read_callback(events[i].data.ptr, server);
 		}
 		else
 		{
-			close_callback(events[i].data.ptr, server);
+			write_callback(events[i].data.ptr, server);
 		}
 	}
 	return 0;

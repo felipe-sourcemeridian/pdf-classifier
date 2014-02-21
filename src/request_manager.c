@@ -3,6 +3,8 @@ static void onread(void *data, file_server *server);
 
 static void onclose(void *data, file_server *server);
 
+static void onwrite(void *data, file_server *server);
+
 static void find_and_notify_all_request_timeout(request_manager *request_manafer);
 
 static int read_request_data(classifier_request *request);
@@ -83,7 +85,7 @@ int add_news_request_to_request_manager(request_manager *request_manager)
 
 int process_all_request(request_manager *manager, int timeout)
 {
-	if(process_events_on_server(manager->server, onread, onclose, timeout) < 0)
+	if(process_events_on_server(manager->server, onread, onclose, onwrite, timeout) < 0)
 	{
 		return -1;
 	}
@@ -113,7 +115,17 @@ static classifier_request *get_request_not_active_from_request_list(classifier_r
 	}	
 	return NULL;
 }
-
+static void onwrite(void *data, file_server *server)
+{
+	classifier_request *request = (classifier_request *)data;
+	request_manager *manager = (request_manager *)server->handler_data;
+	REQUEST_WRITE_RESPONSE_CALLBACK onwrite_response = manager->onwrite_reponse_event;
+	if(!IS_WRITE_STATE(request->current_state))
+	{
+		return;
+	}
+	onwrite_response(request, manager);
+}
 
 static void onread(void *data, file_server *server)
 {
@@ -121,8 +133,14 @@ static void onread(void *data, file_server *server)
 	request_manager *manager = (request_manager *)server->handler_data;
 	REQUEST_ERROR_CALLBACK onrequest_error = manager->onrequest_error;
 	REQUEST_CALLBACK onrequest_event = manager->onrequest_event;
-	int bytes = read_request_data(request);
-	int keeping_reading =  bytes == request->bytes_remaining_to_read;
+	int bytes = 0;
+	int keeping_reading = 0;
+	if(!IS_READ_STATE(request->current_state))
+	{
+		return;		
+	}
+	bytes = read_request_data(request);
+	keeping_reading =  bytes == request->bytes_remaining_to_read;
 	if(bytes < 0)
 	{
 		onrequest_error(request, manager, SOCKET);
@@ -135,15 +153,14 @@ static void onread(void *data, file_server *server)
 		if(request->current_state == HEADER_PARSING)
 		{	
 			process_request_header(request, manager);
-			if(request->current_state == FINISH)
+			if(!IS_READ_STATE(request->current_state))
 			{
-				reset_classifier_request_to_default_state(request);
-				break;
+				return;
 			}
 		}
 		else
 		{
-			process_request(request, manager);	
+			process_request(request, manager);
 		}
 		bytes = read_request_data(request);
 		keeping_reading =  bytes == request->bytes_remaining_to_read;

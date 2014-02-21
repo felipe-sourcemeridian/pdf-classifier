@@ -1,5 +1,6 @@
 #ifndef FILESERVER
 #define FILESERVER
+#include "fcntl.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include "sys/epoll.h"
@@ -10,9 +11,10 @@
 #include "stdlib.h"
 #include "string.h"
 #include <stdio.h>
-#define EVENTS_TO_WATCH EPOLLIN | EPOLLERR |EPOLLRDHUP | EPOLLHUP | EPOLLET
-#define IS_CLOSE_EVENT(events)	(events & EPOLLRDHUP || events & EPOLLERR || events & EPOLLHUP)
-#define IS_READY_READ_EVENT(events)	(events & EPOLLIN || events & EPOLLET)
+#define EVENTS_TO_WATCH  EPOLLERR |EPOLLRDHUP | EPOLLHUP | EPOLLET | EPOLLIN | EPOLLOUT
+#define IS_CLOSE_EVENT(events)	((events & EPOLLRDHUP) || (events & EPOLLERR) || (events & EPOLLHUP))
+#define IS_READY_READ_EVENT(events)	((events & EPOLLIN))
+#define IS_WRITE_EVENT(events)	(events & EPOLLOUT)
 typedef struct
 {
 	int fd;
@@ -33,6 +35,6 @@ int register_client_on_server(int client, file_server *server, void *data);
 
 int unregister_client_on_server(int client, file_server *server);
 
-int process_events_on_server(file_server *server, EVENT_CALLBACK read_callback, EVENT_CALLBACK close_callback, int timeout);
+int process_events_on_server(file_server *server, EVENT_CALLBACK read_callback, EVENT_CALLBACK close_callback, EVENT_CALLBACK write_callback, int timeout);
 
 #endif

@@ -1,7 +1,7 @@
 #include "request_manager_builder.h"
 static file_server *create_server(int port, int max_request);
 
-request_manager *create_request_manager(int port, int timeout, int max_request, classifier_request_list *requests, REQUEST_CALLBACK onrequest_event, REQUEST_ERROR_CALLBACK onrequest_error)
+request_manager *create_request_manager(int port, int timeout, int max_request, classifier_request_list *requests, REQUEST_CALLBACK onrequest_event, REQUEST_ERROR_CALLBACK onrequest_error, REQUEST_WRITE_RESPONSE_CALLBACK onwrite_response)
 {
 	file_server *server = create_server(port, max_request);
 	request_manager *manager = NULL;
@@ -22,6 +22,7 @@ request_manager *create_request_manager(int port, int timeout, int max_request, 
 	manager->requests = requests;
 	manager->onrequest_event = onrequest_event;
 	manager->onrequest_error = onrequest_error;
+	manager->onwrite_reponse_event = onwrite_response;
 	return manager;	
 }
 
