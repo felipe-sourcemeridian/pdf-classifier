@@ -5,6 +5,10 @@ apt-get install libicu-dev
 Install GLIB2
 apt-get install libglib2.0-dev
 Development Enviroment
+	Compile Base Server For Testing
+		make baseserver
+	Compile Linkapedia Server For Testing:
+		make linkapediaserver
 	Compile Project:
 		make
 	Clean Build Files
@@ -16,6 +20,10 @@ The Server Tools is script for testing the server functionality
 the directory for this tools is server_tools on the development tree
 	classifier_client.py:
 		This Application is for testing the classifier server for more information execute ./classifier_client.py -h
+	fileserverclient.py:
+		This Application is for testing only the server functionality with base server for more information how used the application please runing the next command ./fileserverclient.py -h on the server_tools directory
+	linkapediaclient.py:
+		This Application is for testing linkpadia's protocol but you need the linkapedia server alone see above how compile the linkapedia server alone for execute the aplication execute the next comand  and see all options ./linkapediaclient.py -h
 Classifier Logs:
 	When daemon start you can see the logs with the command tail -f /var/logs/syslog
 Serilize Tools:

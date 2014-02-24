@@ -17,6 +17,8 @@ void onrequest_event(classifier_request *request, request_manager *manager, pack
 
 void onrequest_error(classifier_request *request, request_manager *manager,classifier_request_error error);
 
+void onrequest_write_response_event(classifier_request *request, request_manager *manager);
+
 void print_error_description(classifier_request_error error);
 
 int main(int argc, char **argv)
@@ -33,7 +35,7 @@ int main(int argc, char **argv)
 		printf("error building request list \n");
 		exit(-1);		
 	}
-	manager = create_request_manager(port, request_timeout, max_request, request_list, onrequest_event, onrequest_error);
+	manager = create_request_manager(port, request_timeout, max_request, request_list, onrequest_event, onrequest_error, onrequest_write_response_event);
 	if(manager == NULL)
 	{
 		printf("error building request manager \n");
@@ -118,6 +120,11 @@ void print_header_request(classify_document_request_header header)
 {
 	printf("packet size :%d \n",header.request_size);
 	printf("packet type :%d\n", header.packet_type);
+}
+
+void onrequest_write_response_event(classifier_request *request, request_manager *manager)
+{
+	printf("buffer viable for writing \n");
 }
 
 void print_error_description(classifier_request_error error)

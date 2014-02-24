@@ -27,7 +27,7 @@ int SERVER_FD=0;
 void signal_callback(int _sig_num)
 {
 	syslog(LOG_INFO,"shutdown classifier server\n");
-	close(SERVER_FD);	
+	close(SERVER_FD);
 }
 
 
