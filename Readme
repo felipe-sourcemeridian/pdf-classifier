@@ -30,3 +30,20 @@ Serilize Tools:
 	This Tools is for serializer the text files, you can find this tools on the directory serialize_tools on the development directory
 	serialize_file.py:
 		for the option and help execute the next command for help ./serialize_tools.py -h
+Configuration File
+	The Configuration file you set up all option for daemon run has 3 section
+	[static_data] 
+		this section you set up the files for classifier process request
+		state_aho configure the path for word's tree
+		list_node configure the path for node list file
+		map_word configure the path for map word
+		node_musthave path to node must terms
+		node_sig_vector path to node sig vector
+		unfiltered_node path to unfiltered node
+	[daemon]
+		this sections is set up options for daemon has online option working_directory this is the path daemon's root jail
+	[server]
+		port the server's port
+		max_request the max number of request that server can handled
+		request_timeout when the request's time is more that this value the request is free because is a slow consumer
+
