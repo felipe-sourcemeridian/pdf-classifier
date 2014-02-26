@@ -1,0 +1,18 @@
+#!/bin/sh
+case "$1" in
+	start)
+		echo -n "starting classifier server\n"
+		classifierd /etc/classifier.conf
+		echo -n "started\n"
+		;;
+	stop)
+		echo -n "stop classifier\n"
+		killall -2 classifierd
+		;;
+	restart|force-reload)
+		echo -n "restarting the classifier's server\n"
+		killall -2 classifierd
+		classifierd /etc/classifier.conf
+		;;
+esac	
+exit 0

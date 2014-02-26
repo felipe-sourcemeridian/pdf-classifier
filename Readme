@@ -1,3 +1,11 @@
+Set Up Production Enviroment
+	apt-get install libicu48
+	apt-get install libglib2.0
+	copy all static files on /usr/local/classifier_static_data
+	install classifier's package how to build see below
+	dpkg -i classifier_0.1_amd64.deb	
+Uninstall Classifier Package
+	dpkg -r classifier
 Set Up Development Enviroment Debian
 apt-get install binutils
 Install ICU library
@@ -11,6 +19,8 @@ Development Enviroment
 		make linkapediaserver
 	Compile Project:
 		make
+	Build Debian Package:
+		make build_package
 	Clean Build Files
 		make clean
 	Run Classifier

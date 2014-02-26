@@ -2,7 +2,7 @@ Package: classifier
 Version: 0.1
 Section: web
 Priority: optional
-Architecture: i386
+Architecture: amd64
 Essential: no
 Depends: libicu48, libglib2.0-0
 Maintainer: Carlos Andres Viera <andresvie@gmail.com>

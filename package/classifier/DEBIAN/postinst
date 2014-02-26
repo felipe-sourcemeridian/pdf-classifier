@@ -1,0 +1,3 @@
+#!/bin/sh
+update-rc.d classifier defaults
+echo "Now You Can copy the static files on the /usr/local/classifier_static_data/ and start the server"

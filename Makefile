@@ -3,7 +3,7 @@ glibflags = $(shell pkg-config --libs --cflags glib-2.0)
 icuflags = $(shell icu-config --cflags --ldflags --ldflags-icuio)
 INCLUDE = include
 SRC = src
-CC = gcc -Wall -I $(INCLUDE)
+CC = gcc -Wall -I $(INCLUDE) $(CFLAGS)
 OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o request_response_manager.o	client_writer.o classifier_client.o
 OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o memory_poll.o memory_management.o
 default: $(OBJS) 
@@ -60,5 +60,9 @@ client_writer.o: $(INCLUDE)/client_writer.h $(SRC)/client_writer.c
 classifier_client.o: $(INCLUDE)/classifier_client.h $(SRC)/classifier_client.c
 	$(CC) -c $(SRC)/classifier_client.c -o classifier_client.o $(glibflags) $(icuflags)
 
+build_package:
+	make
+	mv classifier package/classifier/usr/bin/classifierd
+	dpkg-deb --build package/classifier ./
 clean:
 	rm classifier
