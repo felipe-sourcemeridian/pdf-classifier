@@ -1,9 +1,8 @@
 Set Up Production Enviroment
-	apt-get install libicu48
-	apt-get install libglib2.0
-	copy all static files on /usr/local/classifier_static_data
-	install classifier's package how to build see below
-	dpkg -i classifier_0.1_amd64.deb	
+	unzip -e classifier.zip
+	chmod a+x install_classifier.sh
+	./install_classifier.sh
+	the classifier now is running
 Uninstall Classifier Package
 	dpkg -r classifier
 Set Up Development Enviroment Debian
@@ -12,6 +11,7 @@ Install ICU library
 apt-get install libicu-dev
 Install GLIB2
 apt-get install libglib2.0-dev
+apt-get install zip
 Development Enviroment
 	Compile Base Server For Testing
 		make baseserver
@@ -21,6 +21,7 @@ Development Enviroment
 		make
 	Build Debian Package:
 		make build_package
+		this option generate package for mapreduce boottrap run a zip file called classifier.zip
 	Clean Build Files
 		make clean
 	Run Classifier

@@ -64,5 +64,6 @@ build_package:
 	make
 	mv classifier package/classifier/usr/bin/classifierd
 	dpkg-deb --build package/classifier ./
+	tar -cvzf classifier.tar.gz classifier_0.1_amd64.deb install_classifier.sh
 clean:
 	rm classifier
