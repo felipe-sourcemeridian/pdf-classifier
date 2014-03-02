@@ -13,14 +13,18 @@
 #include "unistd.h"
 #include "request_response_manager.h"
 #include "classifier_client.h"
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #define SERVER_CONFIG "server"
 #define PORT	"port"
 #define REQUEST_TIMEOUT_CONFIG	"request_timeout"
 #define MAX_REQUEST	"max_request"
 
 const char *REMOVE_ACCENTS = "NFD;[:Nonspacing Mark:] Remove;NFC;Lower";
-const char *LOG_NAME="CLASSIFIER DAEMON";
-int SERVER_FD=0;
+const char *LOG_NAME = "CLASSIFIER DAEMON";
+int SERVER_FD = 0;
 
 
 
@@ -40,6 +44,8 @@ static int get_request_timeout_from_config_file(GKeyFile *config_file);
 
 static  const char* get_error_description(classifier_request_error error);
 
+static void print_peer_name(classifier_request *request);
+
 classifier_request_list *create_requests(int max_request, memory_page_buffer **buffer, file_transformation *file_transformation, classifier *classifier);
 
 void onrequest_event(classifier_request *request, request_manager *manager, packet_type type);
@@ -47,6 +53,8 @@ void onrequest_event(classifier_request *request, request_manager *manager, pack
 void onrequest_write_response_event(classifier_request *request, request_manager *manager);
 
 void onrequest_error(classifier_request *request, request_manager *manager,classifier_request_error error);
+
+
 
 
 int main(int argc,char **argv)
@@ -164,6 +172,7 @@ int main(int argc,char **argv)
 	closelog();
 	return 0;
 }
+
 void onrequest_event(classifier_request *request, request_manager *manager, packet_type type)
 {
 	classifier_request_data *request_data = (classifier_request_data *)request->request_data;
@@ -206,10 +215,14 @@ void onrequest_write_response_event(classifier_request *request, request_manager
 
 void onrequest_error(classifier_request *request, request_manager *manager, classifier_request_error error)
 {
-	syslog(LOG_ERR,"request close %d %s\n", request->fd, get_error_description(error));
-	if(error == SOCKET)
+	print_peer_name(request);
+	syslog(LOG_ERR, "request close %d %s\n", request->fd, get_error_description(error));
+	if(error == PARSE || error == PACKET_SIZE)
 	{
-		syslog(LOG_ERR,"request error  %d %s \n", request->fd, strerror(errno));
+		syslog(LOG_ERR, "packet size %d, packet type %c\n", request->header.request_size, request->header.packet_type);
+	} else if(error == SOCKET)
+	{
+		syslog(LOG_ERR, "request error  %d %s \n", request->fd, strerror(errno));
 	}
 	close_and_clean_request(request, manager);
 }
@@ -233,14 +246,13 @@ classifier_request_list *create_requests(int max_request, memory_page_buffer **p
 		buffer = create_char_buffer(page_buffer);		
 		if(buffer == NULL)
 		{
-			syslog(LOG_ERR, "dont have memory viable build request list\n");		
+			syslog(LOG_ERR, "dont have memory viable build request list\n");	
 			syslog(LOG_ERR,"error create buffer %s \n" ,strerror(errno));
 			exit(-1);
 		}
 	
-		requests[i].buffer= buffer;
-		
-		requests[i].request_data = create_classifier_request_data(page_buffer, file_transformation_instance, classifier_instance);	
+		requests[i].buffer = buffer;	
+		requests[i].request_data = create_classifier_request_data(page_buffer, file_transformation_instance, classifier_instance);
 		reset_classifier_request_to_default_state(&requests[i]);
 		set_request_response_state_default(&requests[i]);
 	}
@@ -299,4 +311,16 @@ static const char* get_error_description(classifier_request_error error)
 		default:
 			return "System Error :";
 	}
+}
+
+void print_peer_name(classifier_request *request)
+{
+	struct sockaddr_in peer;
+	int peer_length = sizeof(struct sockaddr_in);
+	if(getpeername(request->fd, &peer, &peer_length) < 0)
+	{
+		syslog(LOG_ERR, "can not get peer's name %s\n", strerror(errno));
+		return;
+	}
+	syslog(LOG_INFO, "%s:%d\n", inet_ntoa(peer.sin_addr), (int) peer.sin_port);	
 }

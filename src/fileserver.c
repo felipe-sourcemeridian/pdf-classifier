@@ -82,13 +82,7 @@ int process_events_on_server(file_server *server, EVENT_CALLBACK read_callback, 
 	}
 	for(i=0; i < event_size; i++)
 	{
-		events_flags =events[i].events;
-		printf("is close event read hup %d\n",(events_flags & EPOLLRDHUP));
-		printf("is clsose event error %d\n",(events_flags & EPOLLERR));
-		printf("is clsoe event socket peer close %d\n",(events_flags & EPOLLHUP)); 
-		printf("is read event %d\n", events_flags & EPOLLIN);
-		printf("is write %d\n", events_flags & EPOLLOUT);
-
+		events_flags = events[i].events;
 		if(IS_CLOSE_EVENT(events_flags))
 		{
 			close_callback(events[i].data.ptr, server);

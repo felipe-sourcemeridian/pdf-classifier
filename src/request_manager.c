@@ -36,16 +36,16 @@ int close_request_on_request_manager(classifier_request *request,request_manager
 {
 	if(unregister_client_on_server(request->fd, request_manager->server) < 0) 
 	{
-		printf("error unregister client fd:%d\n", request->fd);
 		return -1;
 	}
+
 	if(close(request->fd) < 0)
-	{
-		printf("error close connection %d\n", request->fd);
+	{		
 		return -1;
 	}
+	
 	reset_classifier_request_to_default_state(request);
-	request_manager->requests->current_size -= 1; 
+	request_manager->requests->current_size -= 1; 	
 	return 0;	
 }
 
@@ -66,8 +66,7 @@ int add_news_request_to_request_manager(request_manager *request_manager)
 		if(fd == 0)
 		{
 			return 0;
-		}
-		printf("new connection %d\n", fd);
+		}		
 		request = get_request_not_active_from_request_list(requests);
 		if(register_client_on_server(fd, server, request) < 0)
 		{
@@ -78,6 +77,7 @@ int add_news_request_to_request_manager(request_manager *request_manager)
 		requests->current_size = requests->current_size + 1;
 		request->fd = fd;
 		request->is_request_active = 1;
+		request->current_state = HEADER_PARSING;
 		request->request_start_time = start_request_time.tv_sec;
 	}
 	return 0;
@@ -108,8 +108,7 @@ static classifier_request *get_request_not_active_from_request_list(classifier_r
 	for(i = 0;i < requests->capacity; i++)
 	{
 		if(requests->requests[i].is_request_active == 0)
-		{
-			printf("getting with index %d \n", i);
+		{		
 			return &requests->requests[i];
 		}
 	}	
@@ -137,7 +136,9 @@ static void onread(void *data, file_server *server)
 	int keeping_reading = 0;
 	if(!IS_READ_STATE(request->current_state))
 	{
-		return;		
+
+		syslog(LOG_ERR, "can not reading wrong state %d --> %d current_state %d header %d\n", request->fd, request, request->current_state, HEADER_PARSING);
+		return;	
 	}
 	bytes = read_request_data(request);
 	keeping_reading =  bytes == request->bytes_remaining_to_read;
@@ -179,8 +180,7 @@ static void process_request(classifier_request *request, request_manager *reques
 	onrequest_event(request, request_manager, request->header.packet_type);
 	request->current_packet_size = CLASSIFY_DOCUMENT_REQUEST_HEADER_SIZE;
 	request->bytes_remaining_to_read = request->current_packet_size;
-	request->current_state = HEADER_PARSING;
-		
+	request->current_state = HEADER_PARSING;		
 }
 
 
@@ -190,15 +190,19 @@ static void process_request_header(classifier_request *request, request_manager 
 	REQUEST_ERROR_CALLBACK onrequest_error = request_manager->onrequest_error;
 	REQUEST_CALLBACK onrequest_event = request_manager->onrequest_event;
 	if(parse_request_header(request->buffer->buffer, &request->header) < 0)
-	{	
+	{			
 		onrequest_error(request, request_manager, PARSE);
 		request->current_state = FINISH;
+		return;
 	}
+
 	if(request->header.request_size > request->buffer->capacity)
 	{		
 		onrequest_error(request, request_manager, PACKET_SIZE);
 		request->current_state = FINISH;
+		return;
 	}
+
 	if(request->header.packet_type == DOCUMENT || request->header.packet_type ==  TITLE)
 	{		
 		request->current_state = BODY_PARSING;
@@ -206,7 +210,7 @@ static void process_request_header(classifier_request *request, request_manager 
 		request->bytes_remaining_to_read = request->header.request_size;
 	}
 	else
-	{		
+	{			
 		onrequest_event(request, request_manager, END_REQUEST);
 		request->current_state = FINISH;
 	}	

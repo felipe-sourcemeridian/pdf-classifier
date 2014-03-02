@@ -4,8 +4,7 @@ classifier_request_data *create_classifier_request_data(memory_page_buffer **buf
 	classifier_document * document = create_classifier_document(buffer);
 	word_poll *word_poll= NULL;
 	classifier_request_data *request_data = (classifier_request_data *)malloc(sizeof(classifier_request_data));
-	word_poll = create_word_poll(buffer);
-	
+	word_poll = create_word_poll(buffer);	
 	if(document == NULL || word_poll == NULL || request_data == NULL)
 	{
 		syslog(LOG_ERR, "dont have memory viable build request list\n");
