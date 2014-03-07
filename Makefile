@@ -9,6 +9,9 @@ OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_bu
 default: $(OBJS) 
 	$(CC) $(OBJS) $(SRC)/main.c -o classifier $(glibflags) $(icuflags)
 	rm $(OBJS)
+static_library: $(OBJS)
+	ar -rcs libclassifier.a $(OBJS) 
+	rm $(OBJS)
 linkapediaserver: $(OBJS_LINKAPEDIA_SERVER)
 	$(CC) $(OBJS_LINKAPEDIA_SERVER) $(SRC)/linkapediaserver.c -o linkapediaserver $(glibflags) $(icuflags) 
 	rm $(OBJS_LINKAPEDIA_SERVER)
@@ -59,11 +62,14 @@ client_writer.o: $(INCLUDE)/client_writer.h $(SRC)/client_writer.c
 	$(CC) -c $(SRC)/client_writer.c -o client_writer.o
 classifier_client.o: $(INCLUDE)/classifier_client.h $(SRC)/classifier_client.c
 	$(CC) -c $(SRC)/classifier_client.c -o classifier_client.o $(glibflags) $(icuflags)
+	
 
 build_package:
-	make
+	make	
 	mv classifier package/classifier/usr/bin/classifierd
 	dpkg-deb --build package/classifier ./
 	tar -cvzf classifier.tar.gz classifier_0.1_amd64.deb install_classifier.sh
+	rm classifier_0.1_amd64.deb
+	rm package/classifier/usr/bin/classifierd
 clean:
 	rm classifier

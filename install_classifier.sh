@@ -6,3 +6,6 @@ unzip -e file_transformation.zip
 mv *.data /usr/local/classifier_static_data/
 mv *.aho /usr/local/classifier_static_data/
 /etc/init.d/classifier start
+cp /etc/init.d/classifier /usr/local/bin/
+rm file_transformation.zip
+rm classifier_0.1_amd64.deb
