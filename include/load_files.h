@@ -6,6 +6,11 @@
 #include "stdio.h"
 #include "memory_management.h"
 #define WORD_STRUCT_SIZE sizeof(word_struct)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct 
 {
 	uint32_t word_id;
@@ -50,4 +55,9 @@ GHashTable *load_words(const char *_file_name,memory_page_buffer **_buffer);
 GHashTable *load_list_node(const char *_file_name,memory_page_buffer **_buffer);
 GHashTable *load_node_musthave_term(const char *_file_name,memory_page_buffer **_buffer);
 unfiltered_node_list *load_unfiltered_nodes(const char *_file_name,memory_page_buffer**_buffer);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

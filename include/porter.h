@@ -1,5 +1,5 @@
-#ifndef _PORTER_H
-#define _PORTER_H
+#ifndef PORTER_H
+#define PORTER_H
 #include <stdio.h>
 #include <string.h>
 #include "memory_management.h"
@@ -9,6 +9,11 @@
 #ifndef TRUE
 #define TRUE 1
 #endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	memory_page_list *page;
@@ -33,4 +38,8 @@ void step5(stemming *_stemming);
 int stem(stemming *_stemming);
 stemming *build_stemming(memory_page_buffer **_memory_page_buffer);
 void delete_stemming(stemming *_stemming);
+#ifdef __cplusplus
+}
+#endif
+
 #endif

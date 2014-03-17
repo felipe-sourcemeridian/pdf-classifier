@@ -9,6 +9,9 @@
  *State machine Aho-Corasick
  *Multipattern Search
  * */
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct _state_aho
 {
 	 struct _state_aho *parent;
@@ -44,4 +47,9 @@ void fixed_pointers(void *_base_pointer,uint64_t _offset);
 void search_words(state_aho_cache *_state_aho_cache,word_poll *_word_poll);
 
 state_aho *get_transitions(uint32_t _word_id,state_aho *_current_node,state_aho_cache *_state_aho_cache);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

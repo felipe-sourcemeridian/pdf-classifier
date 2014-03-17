@@ -17,5 +17,15 @@
 #define REQUEST_MANAGEMENT_GROUP_NAME	"request_management"
 #define REQUEST_MANAGEMENT_MAX_REQUEST_POOL	"max_request_pool"
 #define REQUEST_MANAGEMENT_WAIT_TIMEOUT	"request_wait_timeout"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 GKeyFile *load_config_file(const char *_config_file_name);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

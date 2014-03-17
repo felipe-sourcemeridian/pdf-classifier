@@ -4,14 +4,19 @@ icuflags = $(shell icu-config --cflags --ldflags --ldflags-icuio)
 INCLUDE = include
 SRC = src
 CC = gcc -Wall -I $(INCLUDE) $(CFLAGS)
+CLASSIFIER_DEBUG_FILE = classifier.dbg
 OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o request_response_manager.o	client_writer.o classifier_client.o
 OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o memory_poll.o memory_management.o
 default: $(OBJS) 
 	$(CC) $(OBJS) $(SRC)/main.c -o classifier $(glibflags) $(icuflags)
 	rm $(OBJS)
-static_library: $(OBJS)
-	ar -rcs libclassifier.a $(OBJS) 
+generate_symbols_file: $(OBJS)
+	$(CC) -ggdb $(OBJS) $(SRC)/main.c -o classifier $(glibflags) $(icuflags)
+	objcopy --only-keep-debug classifier $(CLASSIFIER_DEBUG_FILE)
 	rm $(OBJS)
+	rm classifier
+test_objects:$(OBJS) 
+	mv $(OBJS) test/
 linkapediaserver: $(OBJS_LINKAPEDIA_SERVER)
 	$(CC) $(OBJS_LINKAPEDIA_SERVER) $(SRC)/linkapediaserver.c -o linkapediaserver $(glibflags) $(icuflags) 
 	rm $(OBJS_LINKAPEDIA_SERVER)
@@ -65,11 +70,15 @@ classifier_client.o: $(INCLUDE)/classifier_client.h $(SRC)/classifier_client.c
 	
 
 build_package:
-	make	
+	make generate_symbols_file	
+	make
 	mv classifier package/classifier/usr/bin/classifierd
+	cp server_tools/classifier_error_recovery.py .
 	dpkg-deb --build package/classifier ./
-	tar -cvzf classifier.tar.gz classifier_0.1_amd64.deb install_classifier.sh
+	tar -cvzf classifier.tar.gz classifier_0.1_amd64.deb install_classifier.sh $(CLASSIFIER_DEBUG_FILE) classifier_error_recovery.py
 	rm classifier_0.1_amd64.deb
 	rm package/classifier/usr/bin/classifierd
+	rm $(CLASSIFIER_DEBUG_FILE)
+	rm classifier_error_recovery.py
 clean:
 	rm classifier

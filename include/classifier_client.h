@@ -6,6 +6,10 @@
 #include "classifier.h"
 #include "syslog.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	classifier_document *classifier_document;
@@ -20,4 +24,9 @@ typedef struct
 classifier_request_data *create_classifier_request_data(memory_page_buffer **buffer, file_transformation *file_transformation, classifier *classifier);
 
 void close_and_clean_request(classifier_request *request, request_manager *manager);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

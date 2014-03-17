@@ -5,6 +5,9 @@
 #include "glib.h"
 #include "load_files.h"
 #include "syslog.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct
 {
 	GHashTable *map_title;
@@ -47,4 +50,9 @@ void delete_classifier_document(classifier_document *_classifier);
 void clean_classifier_document(classifier_document *_classifier_document);
 int create_classifier_maps(classifier_document *_classifier);
 int create_classifier_words_poll(classifier_document *_classifier,memory_page_buffer **_buffer);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

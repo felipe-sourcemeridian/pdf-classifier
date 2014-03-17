@@ -15,6 +15,11 @@
 #define IS_CLOSE_EVENT(events)	((events & EPOLLRDHUP) || (events & EPOLLERR) || (events & EPOLLHUP))
 #define IS_READY_READ_EVENT(events)	((events & EPOLLIN))
 #define IS_WRITE_EVENT(events)	(events & EPOLLOUT)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	int fd;
@@ -24,7 +29,9 @@ typedef struct
 	int events_size;
 	void *handler_data; 
 }file_server;
+
 typedef void (*EVENT_CALLBACK)(void *data, file_server *server);
+
 int start_server(file_server *server, int active_requests);
 
 int start_epoll_on_server(file_server *server);
@@ -36,5 +43,9 @@ int register_client_on_server(int client, file_server *server, void *data);
 int unregister_client_on_server(int client, file_server *server);
 
 int process_events_on_server(file_server *server, EVENT_CALLBACK read_callback, EVENT_CALLBACK close_callback, EVENT_CALLBACK write_callback, int timeout);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

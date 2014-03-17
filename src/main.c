@@ -100,7 +100,7 @@ int main(int argc,char **argv)
 	init_daemon(_working_directory);
 	/* ignore signal broken pipen server shutdown when this things happen*/
 	signal(SIGPIPE, SIG_IGN);
-	if(signal(SIGINT,signal_callback)==SIG_ERR)
+	if(signal(SIGINT,signal_callback) == SIG_ERR)
 	{
 		syslog(LOG_ERR,"signal handler error\n");
 		exit(EXIT_FAILURE);
@@ -191,7 +191,7 @@ void onrequest_event(classifier_request *request, request_manager *manager, pack
 	else if(request->header.packet_type == END_REQUEST)
 	{
 		classify(request_data->classifier, request_data->classifier_document, request_data->word_poll);
-		syslog(LOG_INFO,"request end change state write response %d\n", request->fd);
+		syslog(LOG_INFO, "request end change state write response %d\n", request->fd);
 		set_request_response_state_default(request);
 		request->current_state = WRITING_RESPONSE;
 		process_request_response(request, manager);

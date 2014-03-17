@@ -9,6 +9,10 @@
 #define IS_LETTER(letter)   (isalpha(letter)||isdigit(letter))
 /*test if a string is not word with alphanumeric characters*/
 #define IS_NOT_WORD(letter_back,letter_next)    (!IS_LETTER(letter_back) && !IS_LETTER(letter_next))
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	stemming *stemming;
@@ -20,5 +24,10 @@ file_transformation *create_file_transformation(memory_page_buffer **_buffer,u16
 void delete_file_transformation(file_transformation *_file_transformation);
 int word_to_number(file_transformation *_file_transformation,char_buffer *_buffer,word_poll *_word_poll);
 int transform_line(file_transformation *_file_transformation,char_buffer *_buffer);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
  

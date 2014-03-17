@@ -48,24 +48,22 @@ int transform_line(file_transformation *_file_transformation,char_buffer *_buffe
 {
 	UErrorCode error;
 	TRANSFORMATION_STATUS status;
-	u16_char_buffer *_u16_buffer=_file_transformation->buffer;
-	_u16_buffer->length=0;
-	memset(&error,0,sizeof(UErrorCode));
-	memset(&status,0,sizeof(TRANSFORMATION_STATUS));	
-	u_strFromUTF8WithSub(_u16_buffer->data,_u16_buffer->capacity,&_u16_buffer->length,_buffer->buffer,_buffer->size,0xFFFD,NULL,&error);
+	u16_char_buffer *_u16_buffer = _file_transformation->buffer;
+	_u16_buffer->length = 0;
+	memset(&error, 0, sizeof(UErrorCode));
+	memset(&status, 0, sizeof(TRANSFORMATION_STATUS));	
+	u_strFromUTF8WithSub(_u16_buffer->data, _u16_buffer->capacity, &_u16_buffer->length, _buffer->buffer, _buffer->size, 0xFFFD, NULL, &error);
 	if(U_FAILURE(error))
-	{
-		printf("transliterator file\n");	
+	{		
 		return -1;
 	}
-	transform(_file_transformation->transformation,_u16_buffer,&status);
-	if(status!=TRANSFORMATION_OK)
-	{
-		printf("transliterator file\n");	
+	transform(_file_transformation->transformation, _u16_buffer, &status);
+	if(status != TRANSFORMATION_OK)
+	{	
 		return -1;
 	}
 
-	u_strToUTF8WithSub(_buffer->buffer,_buffer->capacity,&_buffer->size,_u16_buffer->data,_u16_buffer->length,0xFFFD,NULL,&error);
+	u_strToUTF8WithSub(_buffer->buffer, _buffer->capacity, &_buffer->size, _u16_buffer->data, _u16_buffer->length, 0xFFFD, NULL, &error);
 	if(U_FAILURE(error))
 	{	
 		return -1;
@@ -114,7 +112,6 @@ int word_to_number(file_transformation *_file_transformation,char_buffer *_buffe
 			}
 			if(g_hash_table_lookup_extended(_file_transformation->hwords, _file_transformation->stemming->buffer, &_original_key, &_hash_value) == TRUE)
 			{
-/*				printf("************ word found %s *************\n",_stemming->buffer);*/
 				_word_poll->words[_word_index]=GPOINTER_TO_INT(_hash_value);
 			}
 			else

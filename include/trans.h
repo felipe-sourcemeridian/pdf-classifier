@@ -28,6 +28,11 @@ do								\
 				return NULL;			\
 		      }						\
 }while(0)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {TRANSFORMATION_ERROR,TRANSFORMATION_BAD_RULE,TRANSFORMATION_BAD_ID,TRANSFORMATION_OK} TRANSFORMATION_STATUS;
 typedef enum {BUFFER_ERROR,BUFFER_MEMORY_ERROR,BUFFER_OK} BUFFER_STATUS;
 typedef struct
@@ -35,8 +40,8 @@ typedef struct
     u16_char_buffer *id;
     UTransliterator *transliterator;
 } transformation;
-void from_char_buffer(u16_char_buffer *ubuffer,char_buffer *buffer,BUFFER_STATUS *status);
-transformation *create_transformation(u16_char_buffer *id,TRANSFORMATION_STATUS *status);
+void from_char_buffer(u16_char_buffer *ubuffer, char_buffer *buffer, BUFFER_STATUS *status);
+transformation *create_transformation(u16_char_buffer *id, TRANSFORMATION_STATUS *status);
 /*
  * Delete transformation object create previous with create_transformation please dont delete buffer inside transformation
  *@transformation *transformation
@@ -48,5 +53,10 @@ void delete_transformation(transformation *transformation);
  *@Param TRANSFORMATION_STATUS status this flags is the current status about the transformation the this buffer
  *@Param transformation *transformation
  * */
-u16_char_buffer *transform(transformation *transformation,u16_char_buffer *buffer,TRANSFORMATION_STATUS *status);
+u16_char_buffer *transform(transformation *transformation, u16_char_buffer *buffer, TRANSFORMATION_STATUS *status);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

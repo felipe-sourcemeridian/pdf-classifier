@@ -589,12 +589,12 @@ int stem(stemming *_stemming)
     if (_stemming->k <= _stemming->k0+1)
     {
         return _stemming->k;
-    }
-    step1ab(_stemming);
+    }  
+    step1ab(_stemming);   
     step1c(_stemming);
-    step2(_stemming);
-    step3(_stemming);
-    step4(_stemming);
+    step2(_stemming);   
+    step3(_stemming);   
+    step4(_stemming);    
     step5(_stemming);
     return _stemming->k;
 }
