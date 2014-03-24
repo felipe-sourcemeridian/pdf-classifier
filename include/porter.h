@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-typedef struct
+typedef struct porter
 {
 	memory_page_list *page;
 	char *buffer;

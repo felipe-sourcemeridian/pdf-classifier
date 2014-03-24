@@ -45,3 +45,30 @@ file_transformation *create_file_transformation_from_id(const char *char_id)
 	return create_file_transformation(&page_buffer, remove_accents_id, words_mapping);
 
 }
+
+u16_char_buffer *create_id(const char *_id)
+{
+	int32_t _length=0;
+	int32_t _capacity=0;
+	UErrorCode _pErrorCode;
+	u16_char_buffer *_buffer=(u16_char_buffer *)malloc(sizeof(u16_char_buffer));
+	if(_buffer==NULL)
+	{
+		return NULL;
+	}
+	_capacity=strlen(_id);
+	_buffer->data=(UChar *)malloc(sizeof(UChar)*_capacity);
+	if(_buffer->data==NULL)
+	{
+		free(_buffer);
+		return NULL;
+	}
+	memset(&_pErrorCode,0,sizeof(UErrorCode));	
+	u_strFromUTF8(_buffer->data,_capacity,&_length,_id,_capacity,&_pErrorCode);
+	if(U_FAILURE(_pErrorCode))
+	{	
+		return NULL;
+	}
+	_buffer->length=_capacity;
+	return _buffer;
+}

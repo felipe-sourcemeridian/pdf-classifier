@@ -15,15 +15,19 @@ extern "C" {
 
 typedef struct
 {
-	stemming *stemming;
-	transformation *transformation;
+	struct porter *stemming;
+	struct char_transformation *transformation;
 	GHashTable *hwords;
 	u16_char_buffer *buffer;	
 }file_transformation;
-file_transformation *create_file_transformation(memory_page_buffer **_buffer,u16_char_buffer *_id,GHashTable *_hwords);
+
+file_transformation *create_file_transformation(memory_page_buffer **_buffer, u16_char_buffer *_id, GHashTable *_hwords);
+
 void delete_file_transformation(file_transformation *_file_transformation);
-int word_to_number(file_transformation *_file_transformation,char_buffer *_buffer,word_poll *_word_poll);
-int transform_line(file_transformation *_file_transformation,char_buffer *_buffer);
+
+int word_to_number(file_transformation *_file_transformation, char_buffer *_buffer, word_poll *_word_poll);
+
+int transform_line(file_transformation *_file_transformation, char_buffer *_buffer);
 
 #ifdef __cplusplus
 }

@@ -17,11 +17,13 @@ typedef struct
 	unsigned char size;
 	char word[0];
 }word_struct;
+
 typedef struct
 {
 	uint32_t term_id;
 	float weight;
 }term_weight;
+
 typedef struct
 {
 	uint32_t term_id;
@@ -29,6 +31,7 @@ typedef struct
 	uint32_t size_code_list_tax;
 	uint32_t code_list_buffer[0];	
 }term_nodes;
+
 typedef struct
 {
 	unsigned char type;
@@ -38,17 +41,20 @@ typedef struct
 	term_weight term_weight_buffer[0];
 	char padding2[4];	
 }term_weight_list;
+
 typedef struct
 {
 	uint32_t node_id;
 	uint32_t size;
 	uint32_t words[0];
 }node_musthave_term;
+
 typedef struct
 {
 	uint32_t size;
 	uint32_t nodes[0];
 }unfiltered_node_list;
+
 GHashTable *make_hash(const char *_file_name,memory_page_buffer **_buffer,GHashFunc _hashFunc,GEqualFunc _equalFunc,void **_data);
 GHashTable *load_node_sig_term(const char *_file_name,memory_page_buffer **_buffer);
 GHashTable *load_words(const char *_file_name,memory_page_buffer **_buffer);

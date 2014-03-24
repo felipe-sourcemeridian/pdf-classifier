@@ -11,6 +11,11 @@
 #define CHAR_POLL_MEMORY_SIZE	PAGE_SIZE*5
 #define NODE_SCORE_POLL_MEMORY_SIZE	PAGE_SIZE*5
 #define UCHAR_POLL_MEMORY_SIZE	PAGE_SIZE*6
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef enum {
     NODE_TOP = 1, TITLE_MATCH = 2
 } NODE_SCORE_FLAG;
@@ -99,4 +104,10 @@ void delete_u16_char_buffer(u16_char_buffer *buffer);
 node_score_buffer *create_node_score_buffer(memory_page_buffer **_buffer);
 void delete_node_score_buffer(node_score_buffer *_node_score_buffer);
 node_score_buffer *realloc_node_score_buffer(node_score_buffer *_node_score_buffer,uint32_t _new_size);
+
+#ifdef __cplusplus
+}
+#endif
+
+
 #endif

@@ -55,9 +55,9 @@ def read_file(file_name):
 	fd.close()
 	lines=[line.strip() for line in lines]
 	return lines
-def node_child(node,data):
+def node_child(node, data):
 	for child in node.childs:
-		if(child.data==data):
+		if(child.data == data):
 			return child
 	return None
 def found_fail_node(node,root):

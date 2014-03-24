@@ -35,7 +35,7 @@ extern "C" {
 
 typedef enum {TRANSFORMATION_ERROR,TRANSFORMATION_BAD_RULE,TRANSFORMATION_BAD_ID,TRANSFORMATION_OK} TRANSFORMATION_STATUS;
 typedef enum {BUFFER_ERROR,BUFFER_MEMORY_ERROR,BUFFER_OK} BUFFER_STATUS;
-typedef struct
+typedef struct char_transformation
 {
     u16_char_buffer *id;
     UTransliterator *transliterator;

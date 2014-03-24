@@ -17,6 +17,7 @@ def classify_directory(directory, server):
 				classify_document_on_server(directory + file_name, server)
 				files_classified = files_classified + 1
 				print "files classified %d"% files_classified
+				print "files classified %s"% file_name
 			except Exception as e:
 				print e.message	
 

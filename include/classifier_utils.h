@@ -21,11 +21,13 @@ typedef struct
 	node_score_buffer *node_score_buffer;
 	uint32_t title_size;
 }classifier_document;
+
 typedef struct
 {
 	GHashTable *map_unfiltered_node_list;
 	unfiltered_node_list *unfiltered_node_list;
 }unfiltered_node_list_cache;
+
 typedef struct
 {
 	state_aho_cache *state_aho_cache;
