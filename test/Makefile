@@ -1,5 +1,5 @@
 CC = g++ -I../include -Iinclude -ICppUnitLite/include
-objects = stem_test.o file_transformation_test.o
+objects = stem_test.o
 LINKAGE = libcppunitlite.a
 glibflags = $(shell pkg-config --libs --cflags glib-2.0)
 icuflags = $(shell icu-config --cflags --ldflags --ldflags-icuio)

@@ -6,8 +6,8 @@ using namespace std;
 TEST(Steam, SteamGroup)
 {
 	char *buffer = (char *)	malloc(sizeof(char) * 20);
-	const char *word_to_stemming = "fishing";
-	const char *word_expected = "fish";
+	const char *word_to_stemming = "iapetus";
+	const char *word_expected = "iapetu";
 	stemming *porter = (stemming *) malloc(sizeof(stemming));
 	int length = strlen(word_to_stemming);
 	memcpy(buffer, word_to_stemming, length);
