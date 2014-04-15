@@ -5,7 +5,7 @@
 #include "protocol.h"
 #include <sys/time.h>
 #include "client_reader.h"
-typedef enum{ HEADER_PARSING, BODY_PARSING, WRITING_RESPONSE,WRITING_END_RESPONSE ,FINISH } client_state;
+typedef enum{ HEADER_PARSING, BODY_PARSING, WRITING_RESPONSE, WRITING_END_RESPONSE ,FINISH} client_state;
 
 typedef enum{ SOCKET, PEER_CLOSE_CONNECTION, REQUEST_TIMEOUT, PARSE, PACKET_SIZE} classifier_request_error;
 #define CAN_HANDLE_MORE_REQUEST(requests)	((requests)->current_size < (requests)->capacity)

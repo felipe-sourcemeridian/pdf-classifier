@@ -37,6 +37,7 @@ file_transformation *create_file_transformation(memory_page_buffer **_buffer,u16
 	_file_transformation->buffer=_u16_buffer;
 	return _file_transformation;
 }
+
 void delete_file_transformation(file_transformation *_file_transformation)
 {
 	delete_stemming(_file_transformation->stemming);
@@ -44,6 +45,7 @@ void delete_file_transformation(file_transformation *_file_transformation)
 	delete_u16_char_buffer(_file_transformation->buffer);
 	free(_file_transformation);
 }
+
 int transform_line(file_transformation *_file_transformation,char_buffer *_buffer)
 {
 	UErrorCode error;
@@ -70,6 +72,7 @@ int transform_line(file_transformation *_file_transformation,char_buffer *_buffe
 	}
 	return 0;
 }
+
 int word_to_number(file_transformation *_file_transformation,char_buffer *_buffer,word_poll *_word_poll)
 {
 	int _i=0;
@@ -117,7 +120,7 @@ int word_to_number(file_transformation *_file_transformation,char_buffer *_buffe
 			else
 			{
 /*				printf("************ word not found %s *************\n",_stemming->buffer);*/
-				_word_poll->words[_word_index]=(uint32_t)0xffffffff;
+				_word_poll->words[_word_index] = (uint32_t)0xffffffff;
 			}
 			_word_poll->current_size=_word_poll->current_size+1;
 			_word_index=_word_index+1;

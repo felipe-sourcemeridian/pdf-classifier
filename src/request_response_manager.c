@@ -39,7 +39,7 @@ void process_request_response(classifier_request *request, request_manager *mana
 		}
 		
 	}
-
+	syslog(LOG_ERR,"current nodes writes %d nodes remain %d, keep writing %d\n", request_data->current_node_core, size, keep_writing);
 	if(request_data->current_node_core >= size && keep_writing == 1)
 	{
 		write_header_response_to_request_buffer(request, END_RESPONSE, 0);
@@ -57,10 +57,9 @@ int process_write_request_data(classifier_request *request, request_manager *man
 	classifier_request_data *request_data = (classifier_request_data *)request->request_data;
 	int bytes_written = write_request_data(request);
 	int keep_writing = bytes_written == request_data->bytes_remaining_to_response;
-/*	syslog(LOG_ERR,"fd :%d kw: %d ld:%d bwtn: %d br: %d \n", request->fd, keep_writing, request_data->current_response_size, bytes_written ,request_data->bytes_remaining_to_response);	*/
 	if(bytes_written < 0)
 	{
-		syslog(LOG_INFO,"error try to write response close connection %s\n", strerror(errno));
+		syslog(LOG_INFO, "error try to write response close connection %s\n", strerror(errno));
 		close_and_clean_request(request, manager);
 		return -1;	
 	}
@@ -78,6 +77,12 @@ static int write_request_data(classifier_request *request)
 	int offset = request_data->current_response_size - bytes_remaining_to_response;
 	char *buffer_char = request->buffer->buffer;
 	buffer_char = buffer_char + offset;
+	if(offset > 0)
+	{
+		syslog(LOG_ERR, "buffer offet %d %s\n", offset, buffer_char);
+		syslog(LOG_ERR, "data: ->  %s\n", buffer_char);
+	}
+	
 	bytes_written = write_to_client(request->fd, buffer_char, bytes_remaining_to_response);
 	return bytes_written;
 }

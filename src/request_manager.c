@@ -63,10 +63,12 @@ int add_news_request_to_request_manager(request_manager *request_manager)
 		{
 			return -1;
 		}
+
 		if(fd == 0)
 		{
 			return 0;
-		}		
+		}
+
 		request = get_request_not_active_from_request_list(requests);
 		if(register_client_on_server(fd, server, request) < 0)
 		{
@@ -114,11 +116,13 @@ static classifier_request *get_request_not_active_from_request_list(classifier_r
 	}	
 	return NULL;
 }
+
 static void onwrite(void *data, file_server *server)
 {
 	classifier_request *request = (classifier_request *)data;
 	request_manager *manager = (request_manager *)server->handler_data;
 	REQUEST_WRITE_RESPONSE_CALLBACK onwrite_response = manager->onwrite_reponse_event;
+	syslog(LOG_ERR, "ready from event handler current state %d \n", request->current_state);	
 	if(!IS_WRITE_STATE(request->current_state))
 	{
 		return;
@@ -146,7 +150,7 @@ static void onread(void *data, file_server *server)
 	{
 		onrequest_error(request, manager, SOCKET);
 		return;
-	}	
+	}
 	request->bytes_remaining_to_read = request->bytes_remaining_to_read - bytes; 
 	while(keeping_reading)
 	{
@@ -212,8 +216,8 @@ static void process_request_header(classifier_request *request, request_manager 
 	else
 	{			
 		onrequest_event(request, request_manager, END_REQUEST);
-		request->current_state = FINISH;
-	}	
+//		request->current_state = FINISH;
+	}
 }
 
 static int read_request_data(classifier_request *request)

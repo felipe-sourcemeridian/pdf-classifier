@@ -7,6 +7,7 @@ void map_node(GHashTable *_hnode,uint32_t *_words,uint32_t _size)
 		g_hash_table_insert(_hnode,GINT_TO_POINTER(_words[_i]),GINT_TO_POINTER(_words[_i]));
 	}
 }
+
 int search_node_by_terms(classifier *_classifier,classifier_document *_classifier_document)
 {
 	term_nodes *_term_nodes=NULL;
@@ -30,6 +31,7 @@ int search_node_by_terms(classifier *_classifier,classifier_document *_classifie
 	g_list_free(_list_word_document_original);
 	return 0;
 }
+
 int intersection_nodes(classifier *_classifier,classifier_document *_classifier_document)
 {
 	GList *_list_node_id=g_hash_table_get_keys(_classifier_document->map_node);
@@ -63,16 +65,17 @@ int intersection_nodes(classifier *_classifier,classifier_document *_classifier_
 	g_list_free(_list_node_original);
 	return 0;
 }
+
 int score_classifier_document(classifier *_classifier,classifier_document *_classifier_document)
 {
-	term_weight_list *_term_weight_list=NULL;				
-	gpointer _hash_value=NULL;
-	gpointer _original_value=NULL;
-	node_score_buffer *_node_score_buffer=_classifier_document->node_score_buffer;
-	GHashTable *_map_term_weight_list=_classifier->map_term_weight_list;
-	uint32_t _size=_classifier_document->node_score_buffer->current_size;
+	term_weight_list *_term_weight_list = NULL;	
+	gpointer _hash_value = NULL;
+	gpointer _original_value = NULL;
+	node_score_buffer *_node_score_buffer = _classifier_document->node_score_buffer;
+	GHashTable *_map_term_weight_list = _classifier->map_term_weight_list;
+	uint32_t _size = _classifier_document->node_score_buffer->current_size;
 	uint32_t _i;
-	uint32_t _node_id=0;
+	uint32_t _node_id = 0;
 	for(_i=0;_i<_size;_i++)
 	{
 		_node_id=_node_score_buffer->buffer[_i].node_id;
@@ -82,12 +85,14 @@ int score_classifier_document(classifier *_classifier,classifier_document *_clas
 		}
 		_term_weight_list=(term_weight_list *)_original_value;
 		_node_score_buffer->buffer[_i].type=_term_weight_list->type;
-		do_score(_term_weight_list,_classifier_document->word_poll_document,_classifier_document->map_document,&_node_score_buffer->buffer[_i].frequency,&_node_score_buffer->buffer[_i].coverage);
-		do_score(_term_weight_list,_classifier_document->word_poll_summary,_classifier_document->map_summary,&_node_score_buffer->buffer[_i].frequency_top,&_node_score_buffer->buffer[_i].coverage_top);
+		do_score(_term_weight_list,_classifier_document->word_poll_document,_classifier_document->map_document,&_node_score_buffer->buffer[_i].frequency,&_node_score_buffer->buffer[_i].coverage, _classifier_document->document_size);
+		do_score(_term_weight_list,_classifier_document->word_poll_summary,_classifier_document->map_summary,&_node_score_buffer->buffer[_i].frequency_top,&_node_score_buffer->buffer[_i].coverage_top, SUMMARY_SIZE);
+//		syslog(LOG_ERR, "node id %d, document size %d, summary size %d\n", _node_id, _classifier_document->document_size, SUMMARY_SIZE);
 	}
 	return 0;
 }
-void do_score(term_weight_list *_term_weight_list,word_poll *_word_poll,GHashTable *_map,float *_frequency,float *_coverage)
+
+void do_score(term_weight_list *_term_weight_list,word_poll *_word_poll,GHashTable *_map,float *_frequency,float *_coverage, uint32_t document_size)
 {
 	uint32_t _term_weight_size=_term_weight_list->size;
 	uint32_t _word_poll_size=_word_poll->current_size;
@@ -103,26 +108,27 @@ void do_score(term_weight_list *_term_weight_list,word_poll *_word_poll,GHashTab
 		if(_word_poll->words[_index_word_poll]==_term_weight_buffer[_index_term_weight_buffer].term_id)
 		{
 			_word_count=GPOINTER_TO_INT(g_hash_table_lookup(_map,GINT_TO_POINTER(_word_poll->words[_index_word_poll])));
-			_frequency_aux=(float)_word_count/_word_poll->current_size;	
+			_frequency_aux=(float)_word_count/document_size;
 			_frequency_aux=_frequency_aux*_term_weight_buffer[_index_term_weight_buffer].weight;
 			_frequency_sum=_frequency_sum+_frequency_aux;
 			_coverage_aux=_coverage_aux+1.0f;
 		}
 		if(_word_poll->words[_index_word_poll]<_term_weight_buffer[_index_term_weight_buffer].term_id)
 		{
-			_index_word_poll=_index_word_poll+1;
+			_index_word_poll=_index_word_poll + 1;
 		}
 		else
 		{
-			_index_term_weight_buffer=_index_term_weight_buffer+1;
+			_index_term_weight_buffer = _index_term_weight_buffer + 1;
 		}
 	}
-	*_frequency=_frequency_sum*1000.0f;
-	*_coverage=(float)_coverage_aux/_term_weight_list->size;
+	*_frequency = _frequency_sum * 1000.0f;
+	*_coverage = (float)_coverage_aux / _term_weight_list->size;
 }
+
 void do_score_binary(word_poll *_word_poll,classifier *_classifier,classifier_document *_classifier_document,NODE_SCORE_FLAG _flags)
 {
-	uint32_t _size=_classifier_document->node_score_buffer->current_size;
+	uint32_t _size = _classifier_document->node_score_buffer->current_size;
 	node_score_buffer *_node_score_buffer=_classifier_document->node_score_buffer;
 	GHashTable *_map_node_must_have=_classifier->map_node_must_have;
 	uint32_t _node_id=0;
@@ -140,16 +146,14 @@ void do_score_binary(word_poll *_word_poll,classifier *_classifier,classifier_do
 		{
 			continue;
 		}
-/*		printf("************ score node id %d ***************\n",_node_id);*/
 		_node_must_have_term=(node_musthave_term *)_original_value;
-		_index_node_term=0;
-		_index_word_poll=0;
+		_index_node_term = 0;
+		_index_word_poll = 0;
 		while(_index_word_poll<_word_poll_size && _index_node_term<_node_must_have_term->size)
 		{
 			if(_word_poll->words[_index_word_poll]==_node_must_have_term->words[_index_node_term])
 			{
 				_node_score_buffer->buffer[_i].flags=_node_score_buffer->buffer[_i].flags|_flags;
-/*				printf("************ score word id %d ***************\n",_word_poll->words[_index_word_poll]);*/
 				break;
 			}
 			if(_word_poll->words[_index_word_poll]<_node_must_have_term->words[_index_node_term])
@@ -163,6 +167,7 @@ void do_score_binary(word_poll *_word_poll,classifier *_classifier,classifier_do
 		}
 	}
 }
+
 void do_combine_score(classifier_document *_classifier_document)
 {
 	node_score_buffer *_node_score_buffer=_classifier_document->node_score_buffer;
@@ -191,6 +196,7 @@ void do_combine_score(classifier_document *_classifier_document)
 		}
 	}
 }
+
 void do_roc(node_score *_node_score)
 {
 	

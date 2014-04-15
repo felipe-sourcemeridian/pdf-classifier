@@ -3,9 +3,6 @@
 #include "classifier_utils.h"
 #include "score_document.h"
 #include "time.h"
-#ifndef SUMMARY_SIZE
-#define SUMMARY_SIZE 100
-#endif
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -19,6 +19,7 @@ void sort_word_poll(word_poll *_word_poll)
 		}
 	}
 }
+
 int classify(classifier *_classifier,classifier_document *_classifier_document,word_poll *_word_poll)
 {
 	clock_t _classify_time_old=clock();
@@ -33,71 +34,40 @@ int classify(classifier *_classifier,classifier_document *_classifier_document,w
 	{
 		return 0;
 	}
-	_unit_workd_time_old=clock();
+	_classifier_document->document_size = _word_poll->current_size; 
 	copy_word_poll(_word_poll,_classifier_document->word_poll_document,_word_poll->current_size,0);
+
 	copy_word_poll(_word_poll,_classifier_document->word_poll_summary,SUMMARY_SIZE,_classifier_document->title_size);
+
 	copy_word_poll(_word_poll,_classifier_document->word_poll_title,_classifier_document->title_size,0);
-	_unit_workd_time_current=clock();
-	printf("time for copy words ---->%f\n",(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-/*	printf("************* search phrases title **************\n");*/
-	_unit_workd_time_old=clock();
+
 	search_words(_classifier->state_aho_cache,_classifier_document->word_poll_title);
-/*	printf("************* search phrases summary **************\n");*/
+
 	search_words(_classifier->state_aho_cache,_classifier_document->word_poll_summary);
-/*	printf("************* search phrases document **************\n");*/
+
 	search_words(_classifier->state_aho_cache,_classifier_document->word_poll_document);
-	_unit_workd_time_current=clock();
-	printf("time for search words ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-/*	printf("************* map document **************\n");*/
-	_unit_workd_time_old=clock();
+
 	map_words(_classifier_document->map_document,_classifier_document->word_poll_document);
-/*	printf("************* map summary **************\n");*/
+
 	map_words(_classifier_document->map_summary,_classifier_document->word_poll_summary);
-/*	printf("************* map title **************\n");*/
+
 	map_words(_classifier_document->map_title,_classifier_document->word_poll_title);
-	_unit_workd_time_current=clock();
-	printf("time for map words ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_unit_workd_time_old=clock();
-/*	printf("************* sort document words **************\n");*/
+
 	sort_word_poll(_classifier_document->word_poll_document);
-/*	printf("************* sort document title **************\n");*/
 	sort_word_poll(_classifier_document->word_poll_title);
-/*	printf("************* sort document summary **************\n");*/
 	sort_word_poll(_classifier_document->word_poll_summary);
-	_unit_workd_time_current=clock();
-	printf("time for sort words ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_unit_workd_time_old=clock();
-/*	printf("************* search node by terms **************\n");*/
+
 	search_node_by_terms(_classifier,_classifier_document);
-	printf("map node size %d\n",g_hash_table_size(_classifier_document->map_node));
-	printf("map node tax size %d\n",g_hash_table_size(_classifier_document->map_tax_node));
-	_unit_workd_time_current=clock();
-	printf("time search node by terms ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_unit_workd_time_old=clock();
-/*	printf("************* intersection nodes **************\n");*/
+
 	intersection_nodes(_classifier,_classifier_document);
-	_unit_workd_time_current=clock();
-	printf("time for intersection node ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_unit_workd_time_old=clock();
-/*	printf("************* node for score size %d ***********\n",_classifier_document->node_score_buffer->current_size);*/
-/*	printf("************* score classfier document ************\n");*/
+
 	score_classifier_document(_classifier,_classifier_document);
-	_unit_workd_time_current=clock();
-	printf("time for score classifier document ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_unit_workd_time_old=clock();
-/*	printf("************* do score binary title **************\n");*/
+
 	do_score_binary(_classifier_document->word_poll_title,_classifier,_classifier_document,TITLE_MATCH);
-/*	printf("************* do score binary summary **************\n");*/
+
 	do_score_binary(_classifier_document->word_poll_summary,_classifier,_classifier_document,NODE_TOP);
-	_unit_workd_time_current=clock();
-	printf("time for score binary ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_unit_workd_time_old=clock();
-/*	printf("************* do combine score **************\n");*/
+
 	do_combine_score(_classifier_document);
-	_unit_workd_time_current=clock();
-	printf("time for combine score ---->%f\n",(float)(_unit_workd_time_current-_unit_workd_time_old)/CLOCKS_PER_SEC);
-	_classify_time_current=clock();
-	printf("time for classifier document ---->%f\n",(float)(_classify_time_current-_classify_time_old)/CLOCKS_PER_SEC);
 	return 0;
 }
 void map_words(GHashTable *_map,word_poll *_word_poll)
