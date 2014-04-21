@@ -79,8 +79,7 @@ int main(int argc,char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	_config_file=load_config_file(argv[1]);
-        _config_file=load_config_file("/etc/classifier.conf");
+	_config_file=load_config_file(argv[1]);        
 	if(_config_file==NULL)
 	{
 		printf("wrong config file please check\n");
