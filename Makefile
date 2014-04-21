@@ -3,14 +3,21 @@ glibflags = $(shell pkg-config --libs --cflags glib-2.0)
 icuflags = $(shell icu-config --cflags --ldflags --ldflags-icuio)
 INCLUDE = include
 SRC = src
-CC = gcc -Wall -I $(INCLUDE) $(CFLAGS)
+CC = gcc  -I $(INCLUDE) $(CFLAGS) -ggdb
 CLASSIFIER_DEBUG_FILE = classifier.dbg
 OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o request_response_manager.o	client_writer.o classifier_client.o
+OBJS_TEST_PHRASE = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o
 OBJS_TESTING = porter.o memory_management.o memory_poll.o file_transformation.o load_files.o trans.o
 OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o memory_poll.o memory_management.o
+
 default: $(OBJS) 
 	$(CC) $(OBJS) $(SRC)/main.c -o classifier $(glibflags) $(icuflags)
 	rm $(OBJS)
+test_phrases: $(OBJS_TEST_PHRASE)
+	   $(CC) $(OBJS_TEST_PHRASE)  $(SRC)/testPhrases.c -o test_phrases $(glibflags) $(icuflags)
+	    rm $(OBJS_TEST_PHRASE)
+clean_test_phrases:
+	    rm test_phrases
 generate_symbols_file: $(OBJS)
 	$(CC) -ggdb $(OBJS) $(SRC)/main.c -o classifier $(glibflags) $(icuflags)
 	objcopy --only-keep-debug classifier $(CLASSIFIER_DEBUG_FILE)
@@ -24,14 +31,14 @@ linkapediaserver: $(OBJS_LINKAPEDIA_SERVER)
 baseserver: fileserver.o
 	$(CC) fileserver.o $(SRC)/baseserver.c -o baseserver
 	rm fileserver.o
-trans.o: $(SRC)/trans.c $(INCLUDE)/trans.h memory_management.o
+trans.o: $(SRC)/trans.c $(INCLUDE)/trans.h memory_management.o memory_poll.o
 	$(CC) -c $(SRC)/trans.c
 memory_poll.o: memory_management.o $(INCLUDE)/memory_poll.h $(SRC)/memory_poll.c
 	$(CC) -c $(SRC)/memory_poll.c
 porter.o: $(SRC)/porter.c $(INCLUDE)/porter.h
 	$(CC) -c $(SRC)/porter.c
 file_transformation.o: $(SRC)/file_transformation.c $(INCLUDE)/file_transformation.h
-	$(CC) -c $(SRC)/file_transformation.c $(glibflags) $(icuflags)
+	$(CC) -c $(SRC)/file_transformation.c $(glibflags) 
 load_files.o: $(SRC)/load_files.c $(INCLUDE)/load_files.h
 	$(CC) -c $(SRC)/load_files.c $(glibflags)
 state_aho.o: $(INCLUDE)/state_aho.h $(SRC)/state_aho.c

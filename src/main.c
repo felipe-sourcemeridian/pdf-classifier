@@ -80,6 +80,7 @@ int main(int argc,char **argv)
 	}
 
 	_config_file=load_config_file(argv[1]);
+        _config_file=load_config_file("/etc/classifier.conf");
 	if(_config_file==NULL)
 	{
 		printf("wrong config file please check\n");
@@ -98,7 +99,7 @@ int main(int argc,char **argv)
 		exit(EXIT_FAILURE);
 	}
 	init_daemon(_working_directory);
-	/* ignore signal broken pipen server shutdown when this things happen*/
+/*	 ignore signal broken pipen server shutdown when this things happen*/
 	signal(SIGPIPE, SIG_IGN);
 	if(signal(SIGINT,signal_callback) == SIG_ERR)
 	{

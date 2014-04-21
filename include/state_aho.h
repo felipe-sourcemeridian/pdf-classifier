@@ -31,7 +31,7 @@ void delete_state_aho_cache(state_aho_cache *_state_aho_cache);
 
 void build_cache(state_aho_cache *_state_aho_cache);
 
-struct _state_aho *find_node_transition_by_node_fail(state_aho_cache *_state_aho_cache, struct _state_aho *_node_fail, uint32_t _word_id);
+struct _state_aho *get_node_transition_on_node_fail(state_aho_cache *_state_aho_cache, struct _state_aho *_node_fail, uint32_t _word_id);
 
 void fixed_pointers(void *_base_pointer, uint64_t _offset);
 

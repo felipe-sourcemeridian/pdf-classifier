@@ -4,15 +4,12 @@
 #include "porter.h"
 #include "glib.h"
 #include "memory_poll.h"
+#include "unistd.h"
 #include "string.h"
-/*test if a character is alpha numeric  */
-#define IS_LETTER(letter)   (isalpha(letter)||isdigit(letter))
-/*test if a string is not word with alphanumeric characters*/
-#define IS_NOT_WORD(letter_back,letter_next)    (!IS_LETTER(letter_back) && !IS_LETTER(letter_next))
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#define WORD_ID_NOT_FOUND (uint32_t) 0xffffffff
 typedef struct
 {
 	struct porter *stemming;
