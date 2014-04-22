@@ -83,7 +83,7 @@ build_package:
 	mv classifier package/classifier/usr/bin/classifierd
 	cp server_tools/classifier_error_recovery.py .
 	dpkg-deb --build package/classifier ./
-	tar -cvzf classifier.tar.gz classifier_0.1_amd64.deb install_classifier.sh $(CLASSIFIER_DEBUG_FILE) classifier_error_recovery.py
+	tar -cvzf interactive_classifier.tar.gz classifier_0.1_amd64.deb install_classifier.sh $(CLASSIFIER_DEBUG_FILE) classifier_error_recovery.py
 	rm classifier_0.1_amd64.deb
 	rm package/classifier/usr/bin/classifierd
 	rm $(CLASSIFIER_DEBUG_FILE)
