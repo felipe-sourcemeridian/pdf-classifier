@@ -87,7 +87,6 @@ int score_classifier_document(classifier *_classifier,classifier_document *_clas
 		_node_score_buffer->buffer[_i].type=_term_weight_list->type;
 		do_score(_term_weight_list,_classifier_document->word_poll_document,_classifier_document->map_document,&_node_score_buffer->buffer[_i].frequency,&_node_score_buffer->buffer[_i].coverage, _classifier_document->document_size);
 		do_score(_term_weight_list,_classifier_document->word_poll_summary,_classifier_document->map_summary,&_node_score_buffer->buffer[_i].frequency_top,&_node_score_buffer->buffer[_i].coverage_top, SUMMARY_SIZE);
-//		syslog(LOG_ERR, "node id %d, document size %d, summary size %d\n", _node_id, _classifier_document->document_size, SUMMARY_SIZE);
 	}
 	return 0;
 }
