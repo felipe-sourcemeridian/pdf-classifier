@@ -12,7 +12,7 @@ extern "C" {
 #define WORD_ID_NOT_FOUND (uint32_t) 0xffffffff
 typedef struct
 {
-	struct porter *stemming;
+	struct stemmer *stemming;
 	struct char_transformation *transformation;
 	GHashTable *hwords;
 	u16_char_buffer *buffer;	

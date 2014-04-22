@@ -14,30 +14,18 @@
 extern "C" {
 #endif
 
-typedef struct porter
+typedef struct stemmer
 {
 	memory_page_list *page;
-	char *buffer;
-	size_t size;
-	int k,k0,j;
+        size_t size;
+	char *b;	
+	int k;
+        int j;
 }stemming;
-int cons(int i,stemming *_stemming);
-int m(stemming *_stemming);
-int vowelinstem(stemming *_stemming);
-int doublec(int j,stemming *_stemming);
-int cvc(int i,stemming *_stemming);
-int ends(char * s,stemming *_stemming);
-void setto(char * s,stemming *_stemming);
-void r(char * s,stemming *_stemming);
-void step1ab(stemming *_stemming);
-void step1c(stemming *_stemming);
-void step2(stemming *_stemming);
-void step3(stemming *_stemming);
-void step4(stemming *_stemming);
-void step5(stemming *_stemming);
-int stem(stemming *_stemming);
-stemming *build_stemming(memory_page_buffer **_memory_page_buffer);
-void delete_stemming(stemming *_stemming);
+int stem(struct stemmer *_stemming);
+struct stemmer *build_stemming(memory_page_buffer **_memory_page_buffer);
+void delete_stemming(stemming *porter);
+
 #ifdef __cplusplus
 }
 #endif

@@ -80,17 +80,16 @@ int word_to_number(file_transformation *file_trans, char_buffer *buffer, word_po
     word_found = strtok(buffer->buffer, WORD_DELIMITER);
     while (word_found != NULL) {
         size_word_found = strlen(word_found);
-        memcpy(stemmer->buffer, word_found, size_word_found);
-        stemmer->k0 = 0;
+        memcpy(stemmer->b, word_found, size_word_found);
         stemmer->j = 0;
         stemmer->k = size_word_found - 1;
         null_word = stem(file_trans->stemming) + 1;
-        stemmer->buffer[null_word] = 0;
+        stemmer->b[null_word] = 0;
         if (word_index == words->poll_size) {
             realloc_word_poll(words, words->page->memory_size + PAGE_SIZE);
         }
 
-        if (g_hash_table_lookup_extended(file_trans->hwords, file_trans->stemming->buffer, &original_key, &hash_value) == TRUE) {
+        if (g_hash_table_lookup_extended(file_trans->hwords, file_trans->stemming->b, &original_key, &hash_value) == TRUE) {
             words->words[word_index] = GPOINTER_TO_INT(hash_value);
         } else {
             words->words[word_index] = WORD_ID_NOT_FOUND;
@@ -103,7 +102,7 @@ int word_to_number(file_transformation *file_trans, char_buffer *buffer, word_po
     if (word_index == words->poll_size) {
         realloc_word_poll(words, words->page->memory_size + PAGE_SIZE);
     }
-    words->current_size = words->current_size + 1;    
-    words->words[word_index] = WORD_ID_NOT_FOUND;    
+    words->current_size = words->current_size + 1;
+    words->words[word_index] = WORD_ID_NOT_FOUND;
     return 0;
 }
