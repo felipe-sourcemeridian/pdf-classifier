@@ -22,7 +22,7 @@ void close_and_clean_request(classifier_request *request, request_manager *manag
 {
 	classifier_request_data *request_data = (classifier_request_data *)request->request_data;
 	clean_classifier_document(request_data->classifier_document);
-	request_data->word_poll->current_size = 0;	
+	clear_word_poll(request_data->word_poll);
 	close_request_on_request_manager(request, manager);
 }
 

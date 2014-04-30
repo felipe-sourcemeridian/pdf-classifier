@@ -6,7 +6,6 @@ wget https://s3.amazonaws.com/classifier-process/data/interactive_classifier.tar
 tar -xvzf interactive_classifier.tar.gz
 sudo dpkg -i classifier_0.1_amd64.deb
 sudo apt-get -q -y -f install
-
 set -e
 sudo ./install_classifier.sh $1
 rm -f interactive_classifier.tar.gz

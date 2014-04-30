@@ -11,6 +11,7 @@
 #define CHAR_POLL_MEMORY_SIZE	PAGE_SIZE*5
 #define NODE_SCORE_POLL_MEMORY_SIZE	PAGE_SIZE*5
 #define UCHAR_POLL_MEMORY_SIZE	PAGE_SIZE*6
+#define WORD_ID_NOT_FOUND (uint32_t) 0xffffffff
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -104,7 +105,7 @@ void delete_u16_char_buffer(u16_char_buffer *buffer);
 node_score_buffer *create_node_score_buffer(memory_page_buffer **_buffer);
 void delete_node_score_buffer(node_score_buffer *_node_score_buffer);
 node_score_buffer *realloc_node_score_buffer(node_score_buffer *_node_score_buffer,uint32_t _new_size);
-
+void clear_word_poll(word_poll *words);
 #ifdef __cplusplus
 }
 #endif

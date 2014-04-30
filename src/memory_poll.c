@@ -19,6 +19,7 @@ word_poll *create_word_poll(memory_page_buffer **_page_buffer)
 	_word_poll->buffer=*_page_buffer;
 	_word_poll->words=(uint32_t *)_page->addr;
 	_word_poll->poll_size=WORD_POLL_MEMORY_SIZE/sizeof(uint32_t);
+        clear_word_poll(_word_poll);
 	return _word_poll;
 }
 void copy_word_poll(word_poll *_word_poll_source,word_poll *_word_poll_target,uint32_t _size,uint32_t _offset)
@@ -158,4 +159,10 @@ node_score_buffer *realloc_node_score_buffer(node_score_buffer *_node_score_buff
 	_node_score_buffer->node_score_poll_size=_node_score_buffer->page->memory_size/sizeof(node_score);
 	_node_score_buffer->page_buffer->memory_size=_node_score_buffer->page->memory_size+_new_size;
 	return _node_score_buffer;	
+}
+
+void clear_word_poll(word_poll *words)
+{
+    words->current_size = 0;
+    memset(words->words, WORD_ID_NOT_FOUND, sizeof(uint32_t) * words->poll_size);
 }

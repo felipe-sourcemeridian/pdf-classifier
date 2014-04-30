@@ -46,7 +46,8 @@ TEST(Steam, SteamGroup) {
     CHECK(test_stem_term("analogousli", "analog", porter));
     CHECK(test_stem_term("vietnamization", "vietnam", porter));
     CHECK(test_stem_term("predication", "predic", porter));
-    CHECK(test_stem_term("operator", "oper", porter));    
+    CHECK(test_stem_term("operator", "oper", porter));
+    CHECK(test_stem_term("nambarrie", "nambarri", porter));
     free(buffer);
     free(porter);
 }

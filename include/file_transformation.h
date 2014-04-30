@@ -9,7 +9,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define WORD_ID_NOT_FOUND (uint32_t) 0xffffffff
+
 typedef struct
 {
 	struct stemmer *stemming;
