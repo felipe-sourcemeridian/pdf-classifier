@@ -7,7 +7,7 @@ CC = gcc  -I $(INCLUDE) $(CFLAGS)
 CLASSIFIER_DEBUG_FILE = classifier.dbg
 OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o request_response_manager.o	client_writer.o classifier_client.o
 OBJS_TEST_PHRASE = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o
-OBJS_TESTING = porter.o memory_management.o memory_poll.o file_transformation.o load_files.o trans.o
+OBJS_TESTING = porter.o memory_management.o memory_poll.o file_transformation.o load_files.o trans.o classifier_utils.o score_document.o
 OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o memory_poll.o memory_management.o
 
 default: $(OBJS) 
