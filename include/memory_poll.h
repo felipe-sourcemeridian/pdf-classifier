@@ -18,7 +18,7 @@ extern "C" {
 
 
 typedef enum {
-    NODE_TOP = 1, TITLE_MATCH = 2
+    NODE_TOP = 1, TITLE_MATCH = 2, TITLE_WITH_TOP = 3
 } NODE_SCORE_FLAG;
 typedef enum {
     STANDARD = 1, DATE = 2, EVENT = 3, PERSON = 4, PLACE = 5, CONCEPT = 6, COMPANY = 7
@@ -33,7 +33,7 @@ typedef struct
     	float coverage;
     	float frequency_top;
     	float coverage_top;
-    	/* This can be this values {50, 75, 100} */
+    	/* This can be this values {0, 50, 55, ,60, 65, 75, 80, 100} */
     	/* ROC stands for "Reciever Operating Characteristics" */
     	uint32_t roc;
     	/*represent state for node top and title match*/
