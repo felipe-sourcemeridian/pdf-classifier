@@ -8,6 +8,7 @@
 #define NODE_MUST_HAVE_FILE	"node_musthave"
 #define NODE_SIG_VECTOR_FILE "node_sig_vector"
 #define UNFILTERED_NODE_FILE "unfiltered_node"
+#define NODE_TAX_FILE "node_tax"
 #define SERVER_GROUP_NAME	"server"
 #define SERVER_PORT	"server_port"
 #define SERVER_MAX_REQUEST	"server_max_request"

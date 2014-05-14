@@ -10,6 +10,7 @@
 #include "file_transformation.h"
 #include "classifier.h"
 #include "load_files.h"
+#include "node_tax.h"
 #include "unistd.h"
 #include "request_response_manager.h"
 #include "classifier_client.h"
@@ -17,6 +18,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
 #define SERVER_CONFIG "server"
 #define PORT	"port"
 #define REQUEST_TIMEOUT_CONFIG	"request_timeout"
@@ -72,7 +74,7 @@ int main(int argc, char **argv) {
     }
 
     _config_file = load_config_file(argv[1]);
-    /*_config_file = load_config_file("/etc/classifier.conf");*/
+/*    _config_file = load_config_file("/etc/classifier.conf");*/
     if (_config_file == NULL) {
         printf("wrong config file please check\n");
         exit(EXIT_FAILURE);
@@ -167,6 +169,7 @@ void onrequest_event(classifier_request *request, request_manager *manager, pack
         request_data->classifier_document->title_size = request_data->word_poll->current_size;
     } else if (request->header.packet_type == END_REQUEST) {
         classify(request_data->classifier, request_data->classifier_document, request_data->word_poll);
+        resolve_tax_on_node_score_buffer(request_data->classifier_document->node_score_buffer, request_data->classifier->node_tax_mapping);
         syslog(LOG_INFO, "request end change state write response %d\n", request->fd);
         set_request_response_state_default(request);
         request->current_state = WRITING_RESPONSE;

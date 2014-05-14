@@ -26,6 +26,7 @@ typedef enum {
 typedef struct
 {
 	uint32_t node_id;
+        uint32_t tax_id;
 	float frequency;
     	float fc;
 	float fc15;
@@ -41,7 +42,7 @@ typedef struct
     	/*Helps to identify the node type and facilitates the ROC calculation for such node.*/
     	NODE_TYPE type;
 	/*memory poll boundary*/
-	char padding[20];
+	char padding[16];
 }node_score;
 typedef struct
 {

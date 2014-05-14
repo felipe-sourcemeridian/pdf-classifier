@@ -40,6 +40,7 @@ typedef struct
 	unfiltered_node_list_cache *unfiltered_node_list_cache;
 	GHashTable *map_term_weight_list;
 	GHashTable *map_node_must_have;
+        GHashTable *node_tax_mapping;
 }classifier;
 
 classifier  *create_classifier(state_aho_cache *_state_aho_cache);

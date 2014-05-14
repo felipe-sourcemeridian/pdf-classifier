@@ -7,6 +7,7 @@
 #include "state_aho.h"
 #include "classifier.h"
 #include "config_util.h"
+#include "node_tax.h"
 u16_char_buffer *create_id(const char *_id);
 void delete_id(u16_char_buffer *_buffer);
 void delete_id(u16_char_buffer *_buffer);

@@ -3,11 +3,11 @@ glibflags = $(shell pkg-config --libs --cflags glib-2.0)
 icuflags = $(shell icu-config --cflags --ldflags --ldflags-icuio)
 INCLUDE = include
 SRC = src
-CC = gcc  -I $(INCLUDE) $(CFLAGS)
+CC = gcc -ggdb -I $(INCLUDE) $(CFLAGS)
 CLASSIFIER_DEBUG_FILE = classifier.dbg
-OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o request_response_manager.o	client_writer.o classifier_client.o
+OBJS = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o  daemon_util.o config_util.o fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o request_response_manager.o	client_writer.o classifier_client.o node_tax.o
 OBJS_TEST_PHRASE = trans.o porter.o memory_management.o memory_poll.o  file_transformation.o load_files.o classifier.o state_aho.o score_document.o classifier_utils.o utility.o
-OBJS_TESTING = porter.o memory_management.o memory_poll.o file_transformation.o load_files.o trans.o classifier_utils.o score_document.o
+OBJS_TESTING = porter.o memory_management.o memory_poll.o file_transformation.o load_files.o trans.o classifier_utils.o score_document.o node_tax.o
 OBJS_LINKAPEDIA_SERVER = fileserver.o parse.o client_reader.o request_manager_builder.o request_manager.o memory_poll.o memory_management.o
 
 default: $(OBJS) 
@@ -28,6 +28,8 @@ test_objects:$(OBJS_TESTING)
 linkapediaserver: $(OBJS_LINKAPEDIA_SERVER)
 	$(CC) $(OBJS_LINKAPEDIA_SERVER) $(SRC)/linkapediaserver.c -o linkapediaserver $(glibflags) $(icuflags) 
 	rm $(OBJS_LINKAPEDIA_SERVER)
+node_tax.o:
+	$(CC) -c $(SRC)/node_tax.c $(glibflags)
 baseserver: fileserver.o
 	$(CC) fileserver.o $(SRC)/baseserver.c -o baseserver
 	rm fileserver.o
