@@ -11,6 +11,7 @@ classifier *create_classifier(state_aho_cache *_state_aho_cache) {
     _classifier->map_term_weight_list = NULL;
     _classifier->map_node_must_have = NULL;
     _classifier->node_tax_mapping = NULL;
+    _classifier->black_list = NULL;
     return _classifier;
 }
 

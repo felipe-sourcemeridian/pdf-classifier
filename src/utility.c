@@ -39,44 +39,52 @@ classifier *build_classifier(GKeyFile *_config_file, memory_page_buffer **_buffe
     char *_file_name_node_sig_vector = NULL;
     char *_file_name_unfiltered_node = NULL;
     char *node_tax_file_name = NULL;
+    char *black_list_node_terms_file_name = NULL;
     state_aho_cache *_state_aho_cache = NULL;
     classifier *_classifier = NULL;
     unfiltered_node_list *_unfiltered_node_list = NULL;
     unfiltered_node_list_cache *_unfiltered_node_list_cache = NULL;
     GHashTable *node_tax_mapping = NULL;
+    black_list_node_terms *black_list = NULL;
     _file_name_state_aho = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, STATE_AHO_FILE, NULL);
     _file_name_list_node = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, LIST_NODE_FILE, NULL);
     _file_name_node_musthave = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, NODE_MUST_HAVE_FILE, NULL);
     _file_name_node_sig_vector = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, NODE_SIG_VECTOR_FILE, NULL);
     _file_name_unfiltered_node = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, UNFILTERED_NODE_FILE, NULL);
     node_tax_file_name = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, NODE_TAX_FILE, NULL);
+    black_list_node_terms_file_name = g_key_file_get_string(_config_file, STATIC_DATA_GROUP_NAME, BLACK_LIST_NODE_TERMS_FILE, NULL);
     if(_file_name_list_node == NULL)
     {
-        syslog(LOG_ERR, "node list is not set on configuration file\n");
+        syslog(LOG_ERR, "node list is not set on configuration's file\n");
         return NULL;
     }
     if (_file_name_state_aho == NULL ) {
-        syslog(LOG_ERR, "phrases tree is not set on configuration file\n");
+        syslog(LOG_ERR, "phrases tree is not set on configuration's file\n");
         return NULL;
     }
     if(node_tax_file_name == NULL)
     {
-        syslog(LOG_ERR, "node tax file is not set on configuration file\n");
+        syslog(LOG_ERR, "node tax file is not set on configuration's file\n");
+        return NULL;
+    }
+    if(black_list_node_terms_file_name == NULL)
+    {
+        syslog(LOG_ERR, "black list node terms file is not set on configuration's file\n");
         return NULL;
     }
     if(_file_name_node_musthave == NULL)
     {
-        syslog(LOG_ERR, "node must have file is not set on configuration file\n");
+        syslog(LOG_ERR, "node must have file is not set on configuration's file\n");
         return NULL;
     }
     if(_file_name_node_sig_vector == NULL)
     {
-        syslog(LOG_ERR, "node sig vector file is not set on configuration file\n");
+        syslog(LOG_ERR, "node sig vector file is not set on configuration's file\n");
         return NULL;
     }
     if (  _file_name_unfiltered_node == NULL) 
     {
-        syslog(LOG_ERR, "unfiltered node file is not set on configuration file\n");
+        syslog(LOG_ERR, "unfiltered node file is not set on configuration's file\n");
         return NULL;
     }
     _state_aho_cache = load_state_aho(_file_name_state_aho, _buffer);
@@ -85,6 +93,7 @@ classifier *build_classifier(GKeyFile *_config_file, memory_page_buffer **_buffe
     _map_term_weigth_list = load_node_sig_term(_file_name_node_sig_vector, _buffer);
     _unfiltered_node_list = load_unfiltered_nodes(_file_name_unfiltered_node, _buffer);
     node_tax_mapping = build_node_tax_mapping_from_node_tax_file(node_tax_file_name, _buffer);
+    black_list = build_black_list_node_terms_from_file(_buffer, black_list_node_terms_file_name);
     if (_state_aho_cache == NULL || _map_term_node == NULL) {
         return NULL;
     }
@@ -105,11 +114,13 @@ classifier *build_classifier(GKeyFile *_config_file, memory_page_buffer **_buffe
     g_free(_file_name_node_sig_vector);
     g_free(_file_name_unfiltered_node);
     g_free(node_tax_file_name);
+    g_free(black_list_node_terms_file_name);
     set_unfilterd_node(_classifier, _unfiltered_node_list);
     set_map_term_node(_classifier, _map_term_node);
     set_map_node_must_have(_classifier, _map_node_must_have);
     set_map_term_weight_list(_classifier, _map_term_weigth_list);
     set_unfiltered_node_list_cache(_classifier, _unfiltered_node_list_cache);
     _classifier->node_tax_mapping = node_tax_mapping;
+    _classifier->black_list = black_list;
     return _classifier;
 }

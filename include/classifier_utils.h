@@ -5,6 +5,7 @@
 #include "glib.h"
 #include "load_files.h"
 #include "syslog.h"
+#include "black_list_node_terms.h"
 #ifndef SUMMARY_SIZE
 #define SUMMARY_SIZE 100
 #endif
@@ -21,7 +22,7 @@ typedef struct
 	word_poll *word_poll_document;
 	word_poll *word_poll_title;
 	word_poll *word_poll_summary;
-	node_score_buffer *node_score_buffer;
+	node_score_buffer *node_score_buffer;        
 	uint32_t title_size;
 	uint32_t document_size;
 }classifier_document;
@@ -41,6 +42,7 @@ typedef struct
 	GHashTable *map_term_weight_list;
 	GHashTable *map_node_must_have;
         GHashTable *node_tax_mapping;
+        black_list_node_terms *black_list;
 }classifier;
 
 classifier  *create_classifier(state_aho_cache *_state_aho_cache);

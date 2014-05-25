@@ -35,6 +35,10 @@ int intersection_nodes(classifier *_classifier, classifier_document *_classifier
         if (g_hash_table_lookup_extended(_map_tax_node, _list_node_id->data, &_hash_value, &_original_value) == FALSE && g_hash_table_lookup_extended(_map_unfiltered_node_list, _list_node_id->data, &_hash_value, &_original_value) == FALSE) {
             continue;
         }
+        if(is_node_in_black_list(GPOINTER_TO_INT(_list_node_id->data), _classifier_document->map_document, _classifier->black_list))
+        {
+            continue;
+        }
         if (_node_score_buffer->current_size == _node_score_buffer->node_score_poll_size) {
             _node_score_buffer = realloc_node_score_buffer(_node_score_buffer, _node_score_buffer->page->memory_size + PAGE_SIZE);
             if (_node_score_buffer == NULL) {

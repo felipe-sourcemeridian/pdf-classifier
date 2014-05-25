@@ -3,6 +3,7 @@
 #include "glib.h"
 #define STATIC_DATA_GROUP_NAME	"static_data"
 #define STATE_AHO_FILE	"state_aho"
+#define BLACK_LIST_NODE_TERMS_FILE "black_list_node_terms"
 #define LIST_NODE_FILE	"list_node"
 #define MAP_WORD_FILE	"map_word"
 #define NODE_MUST_HAVE_FILE	"node_musthave"

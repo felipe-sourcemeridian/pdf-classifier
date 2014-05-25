@@ -10,6 +10,5 @@
 #include "node_tax.h"
 u16_char_buffer *create_id(const char *_id);
 void delete_id(u16_char_buffer *_buffer);
-void delete_id(u16_char_buffer *_buffer);
 classifier *build_classifier(GKeyFile *_config_file,memory_page_buffer **_memory_page_buffer);
 #endif

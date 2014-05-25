@@ -4,6 +4,7 @@
 #include "glib.h"
 #include "load_files.h"
 #include "classifier_utils.h"
+#include "black_list_node_terms.h"
 #include "string.h"
 #define SCORE_100   100
 #define SCORE_80   80
