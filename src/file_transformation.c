@@ -89,7 +89,7 @@ int word_to_number(file_transformation *file_trans, char_buffer *buffer, word_po
             realloc_word_poll(words, words->page->memory_size + PAGE_SIZE);
         }
 
-        if (g_hash_table_lookup_extended(file_trans->hwords, file_trans->stemming->b, &original_key, &hash_value) == TRUE) {
+        if (g_hash_table_lookup_extended(file_trans->hwords, word_found, &original_key, &hash_value) == TRUE) {
             words->words[word_index] = GPOINTER_TO_INT(hash_value);
         } else {
             words->words[word_index] = WORD_ID_NOT_FOUND;
