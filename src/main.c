@@ -68,13 +68,17 @@ int main(int argc, char **argv) {
     int event_timeout = 200;
     classifier_request_list *requests = NULL;
     request_manager *manager = NULL;
+#ifndef CLASSIFIER_DEBUG
     if (argc == 1) {
         printf("missing argument\n");
         exit(EXIT_FAILURE);
     }
-
     _config_file = load_config_file(argv[1]);
-/*    _config_file = load_config_file("/etc/classifier.conf");*/
+#else
+    #define STRNAME1(n) #n
+    #define STRNAME(n) STRNAME1(n)
+    _config_file = load_config_file(STRNAME(CLASSIFIER_CONFIG_FILE));
+#endif   
     if (_config_file == NULL) {
         printf("wrong config file please check\n");
         exit(EXIT_FAILURE);
@@ -89,7 +93,11 @@ int main(int argc, char **argv) {
         printf("map word file is not set please check config file\n");
         exit(EXIT_FAILURE);
     }
+#ifndef CLASSIFIER_DEBUG
     init_daemon(_working_directory);
+#else
+    printf("without daemon\n");
+#endif
     /*	 ignore signal broken pipen server shutdown when this things happen*/
     signal(SIGPIPE, SIG_IGN);
     if (signal(SIGINT, signal_callback) == SIG_ERR) {
