@@ -94,7 +94,7 @@ memory_page_list *create_memory_page_list(unsigned int _page_size, unsigned int 
         munmap(_page_memory, _page_size);
         return NULL;
     }
-#ifndef CLASSIFIER_DEBUG
+#ifndef CLASSIFIER_SWAPON
     if (mlock(_page_memory, _page_size) < 0) {
         munmap(_page_memory, _page_size);
         free(_memory_page_list);
@@ -117,7 +117,7 @@ memory_page_list* realloc_memory_page(memory_page_list *_memory_page_list, unsig
     if (_new_page == MAP_FAILED) {
         return NULL;
     }
-#ifndef CLASSIFIER_DEBUG
+#ifndef CLASSIFIER_SWAPON
     mlock(_new_page, _new_page_size);
 #endif
     _memory_page_list->addr = _new_page;

@@ -20,7 +20,7 @@ memory_page_list *create_memory_page_list(unsigned int pages)
 		munmap(memory_addr, page_size);
 		return NULL;
 	}
-        #ifndef CLASSIFIER_DEBUG
+        #ifndef CLASSIFIER_SWAPON
 	if(mlock(memory_addr, page_size) < 0 )
 	{
 		munmap(memory_addr, page_size);
