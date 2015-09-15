@@ -3,6 +3,7 @@ Set Up Production Enviroment
 	the classifier now is running
 Set Up Local Enviroment
 	sudo ./local_install_classifier.sh
+	in the of process he is copy classifier.conf on /etc
 Uninstall Classifier Package
 	dpkg -r classifier
 Set Up Development Enviroment Debian
@@ -54,4 +55,4 @@ Configuration File
 		request_timeout when the request's time is more that this value the request is free because is a slow consumer
 
 Debug
-For Debug Project with Netbeans Go To Project Properties and Options Build on Make Tag Select Build Command and Set ${MAKE} -f Makefile CFLAGS="-ggdb -DCLASSIFIER_DEBUG=1 -DCLASSIFIER_CONFIG_FILE="\"/path_to_config_file\""
+For Debug Project with Netbeans Go To Project Properties and Options Build on Make Tag Select Build Command and Set ${MAKE} -f Makefile CFLAGS="-ggdb -DCLASSIFIER_DEBUG=1 -DCLASSIFIER_CONFIG_FILE="\"/path_to_config_file\"" -DCLASSIFIER_SWAPON=1
