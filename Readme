@@ -1,7 +1,5 @@
 Set Up Production Enviroment
-	unzip -e classifier.zip
-	chmod a+x install_classifier.sh
-	./install_classifier.sh
+	sudo  ./interactive_classifier_bootstrap.sh https://s3.amazonaws.com/classifier-process/data/file_transformation.zip 
 	the classifier now is running
 Uninstall Classifier Package
 	dpkg -r classifier
