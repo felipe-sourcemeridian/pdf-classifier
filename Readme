@@ -4,12 +4,7 @@ Set Up Production Enviroment
 Uninstall Classifier Package
 	dpkg -r classifier
 Set Up Development Enviroment Debian
-apt-get install binutils
-Install ICU library
-apt-get install libicu-dev
-Install GLIB2
-apt-get install libglib2.0-dev
-apt-get install zip
+	sudo ./setup_dev_enviroment.sh
 Development Enviroment
 	Compile Base Server For Testing
 		make baseserver
