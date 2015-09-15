@@ -1,6 +1,8 @@
 Set Up Production Enviroment
 	sudo  ./interactive_classifier_bootstrap.sh https://s3.amazonaws.com/classifier-process/data/file_transformation.zip 
 	the classifier now is running
+Set Up Local Enviroment
+	sudo ./local_install_classifier.sh
 Uninstall Classifier Package
 	dpkg -r classifier
 Set Up Development Enviroment Debian
