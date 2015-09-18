@@ -5,13 +5,17 @@ const char *REMOVE_ACCENTS = "NFD;[:Nonspacing Mark:] Remove;NFC;Lower";
 memory_page_buffer *page_buffer = NULL;
 TEST(Steam, FileTransformation)
 {
-	const char *data = "ñoño fishing nada";
-	uint32_t words_size_expected = 3;
+	const char *data = "ñoño fishing nada G.H.O.S.T G.H.O.S.T. G.H.O.S.t. CARLOS-VIERA";
+	uint32_t words_size_expected = 9;
 	word_poll *words = create_word_poll(&page_buffer);
 	file_transformation *trans = create_file_transformation_from_id(REMOVE_ACCENTS);
 	char_buffer *buffer = create_char_buffer(&page_buffer);
 	word_struct *word_nono = create_word("nono", 1);
-	word_struct *word_fish = create_word("fish", 3);
+	word_struct *word_fish = create_word("fishing", 3);        
+        word_struct *word_ghost = create_word("GHOST", 4);                
+        word_struct *word_ghost3 = create_word("ghost", 6); 
+        word_struct *word_carlos = create_word("CARLOS", 7); 
+        word_struct *word_viera = create_word("VIERA", 8); 
 	if(trans == NULL)
 	{
 		FAIL("fail to create file transformation \n");
@@ -19,21 +23,34 @@ TEST(Steam, FileTransformation)
 	}
 	g_hash_table_insert(trans->hwords, word_nono->word, GINT_TO_POINTER(word_nono->word_id));
 	g_hash_table_insert(trans->hwords, word_fish->word, GINT_TO_POINTER(word_fish->word_id));
+        g_hash_table_insert(trans->hwords, word_ghost->word, GINT_TO_POINTER(word_ghost->word_id));        
+        g_hash_table_insert(trans->hwords, word_ghost3->word, GINT_TO_POINTER(word_ghost3->word_id));        
+        g_hash_table_insert(trans->hwords, word_carlos->word, GINT_TO_POINTER(word_carlos->word_id));        
+        g_hash_table_insert(trans->hwords, word_viera->word, GINT_TO_POINTER(word_viera->word_id));        
 	memcpy(buffer->buffer, data, strlen(data));
+        buffer->size = strlen(data);
 	int resp = word_to_number(trans, buffer, words);
 	CHECK(resp == 0);
 	CHECK(words->current_size == words_size_expected);
 	CHECK(words->words[0] == 1);
 	CHECK(words->words[1] == 3);
-	CHECK(words->words[2] == 0xffffffff);	
+	CHECK(words->words[2] == WORD_ID_NOT_FOUND);	
+        CHECK(words->words[3] == 4);	
+        CHECK(words->words[4] == 4);	
+        CHECK(words->words[5] == 6);	
+        CHECK(words->words[6] == 7);	
+        CHECK(words->words[7] == 8);	
+        CHECK(words->words[8] == WORD_ID_NOT_FOUND);	
 }
 
 word_struct *create_word(const char *word_char, int id)
 {
-	word_struct *word = (word_struct *) malloc(sizeof(word_struct));
-	word->size = strlen(word_char);
-	word->word_id = id;
-	memcpy((void *)word->word , word_char, word->size);
+	word_struct *word = NULL;                
+        int32_t word_size = strlen(word_char)+1;
+        word = (word_struct *) malloc(sizeof(word_struct) + word_size);
+	word->size = word_size;
+	word->word_id = id;                
+	memcpy((void *)&word->word, word_char, word->size);
 	return word;
 }
 

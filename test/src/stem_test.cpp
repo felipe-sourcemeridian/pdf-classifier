@@ -59,7 +59,7 @@ static bool test_stem_term(const char *term, const char* term_expected, struct s
     porter->k = length - 1;
     length = stem(porter);
     porter->b[length + 1] = 0;
-    cout << term << "->" << term_expected << ": " << porter->b << endl;
+    /*cout << term << "->" << term_expected << ": " << porter->b << endl;*/
     return strcmp(term_expected, porter->b) == 0;
     
 }
