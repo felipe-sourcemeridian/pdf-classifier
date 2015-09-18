@@ -165,7 +165,7 @@ static int is_word_acronym(char *word) {
     int word_length = strlen(word);
     int i;
     for (i = 0; i < word_length; i++) {
-        if (ACRONYM_POINT == word[i] || isupper(word[i])) {
+        if (ACRONYM_POINT == word[i] || isupper(word[i]) || isdigit(word[i])) {
             continue;
         }
         return 0;
