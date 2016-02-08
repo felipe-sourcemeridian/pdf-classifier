@@ -63,6 +63,7 @@ int word_to_number(file_transformation *file_trans, char_buffer *buffer, word_po
     gpointer hash_value;
     int word_size = 0;
     char *word_found = NULL;
+    buffer->buffer[buffer->size]= 0;
     word_found = strtok(buffer->buffer, WORD_DELIMITER);
     while (word_found != NULL) {
         word_size = strlen(word_found) + 1;
@@ -78,12 +79,11 @@ int word_to_number(file_transformation *file_trans, char_buffer *buffer, word_po
             realloc_word_poll(words, words->page->memory_size + PAGE_SIZE);
         }
 
-        if (g_hash_table_lookup_extended(file_trans->hwords, file_trans->word_buffer->buffer, &original_key, &hash_value) == TRUE) {
+        if (g_hash_table_lookup_extended(file_trans->hwords, file_trans->word_buffer->buffer, &original_key, &hash_value) == TRUE) {            
             words->words[word_index] = GPOINTER_TO_INT(hash_value);
         } else {
             words->words[word_index] = WORD_ID_NOT_FOUND;
-        }
-
+        }                        
         words->current_size = words->current_size + 1;
         word_index = word_index + 1;
         word_found = strtok(NULL, WORD_DELIMITER);
