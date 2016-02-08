@@ -179,7 +179,11 @@ static void do_roc(node_score *score) {
         score->roc = SCORE_60;
     } else if (IS_SCORE_55(score)) {
         score->roc = SCORE_55;
-    } else if (IS_SCORE_50(score)) {
+    }
+    else if(IS_SCORE_52(score)){
+        score->roc = SCORE_52;
+    }
+    else if (IS_SCORE_50(score)) {
         score->roc = SCORE_50;
     } else {
         score->roc = 0;

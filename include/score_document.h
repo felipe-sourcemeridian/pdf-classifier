@@ -13,6 +13,7 @@
 #define SCORE_60   60
 #define SCORE_55   55
 #define SCORE_50   50
+#define SCORE_52    52
 #define IS_SCORE_COVERAGE_GT_20(score) score->coverage > 0.20f
 #define IS_TITLE_MATCH(score) (score->flags & TITLE_MATCH) != 0
 #define IS_SCORE_100(score)  IS_SCORE_COVERAGE_GT_20(score)  &&  score->fc > 1.063f
@@ -20,6 +21,7 @@
 #define IS_SCORE_80(score)   IS_SCORE_75(score) && IS_TITLE_MATCH(score)
 #define IS_SCORE_50(score)   IS_SCORE_COVERAGE_GT_20(score)  &&  score->fc > 0.3f
 #define IS_SCORE_55(score)   score->fc > 0.3f  &&  IS_TITLE_MATCH(score)
+#define IS_SCORE_52(score)   score->fc >= 0.05 && score->coverage >= 0.1
 #define IS_SCORE_60(score)   score->coverage > 0.125f && score->fc > 0.6f
 #define IS_SCORE_65(score)   IS_SCORE_60(score) && IS_TITLE_MATCH(score)
 #ifdef __cplusplus

@@ -94,5 +94,14 @@ build_package:
 	rm package/classifier/usr/bin/classifierd
 	rm $(CLASSIFIER_DEBUG_FILE)
 	rm classifier_error_recovery.py
+build_new_classifier:
+	make
+	mkdir _classifier
+	mv classifier _classifier
+	mv _classifier classifier
+	cp server_tools/classifier_error_recovery.py classifier
+	cp package/classifier/etc/classifier.conf classifier
+	tar -cvzf classifier.tar.gz classifier
+	rm -rf classifier
 clean:
 	rm classifier
