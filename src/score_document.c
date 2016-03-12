@@ -192,7 +192,7 @@ static void do_roc(node_score *score) {
 
 void map_node(GHashTable *map_node, uint32_t *nodes, uint32_t size) {
     uint32_t i;
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < size; i++) {        
         g_hash_table_insert(map_node, GINT_TO_POINTER(nodes[i]), GINT_TO_POINTER(nodes[i]));
     }
 }

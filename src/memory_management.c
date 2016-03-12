@@ -1,6 +1,7 @@
 #include "memory_management.h"
 #include "time.h"
 #include "stdio.h"
+#include "syslog.h"
 
 int file_size(int _fd) {
     struct stat _stat;
@@ -22,6 +23,7 @@ void *map_file(const char *_file_name, memory_page_buffer **_buffer, unsigned ch
     }
     _fd = open(_file_name, _flags);
     if (_fd < 0) {
+        syslog(LOG_ERR, "can not open file %s\n", _file_name);
         return NULL;
     }
     _file_size = file_size(_fd);
@@ -32,6 +34,7 @@ void *map_file(const char *_file_name, memory_page_buffer **_buffer, unsigned ch
     _page = create_memory_page_list(_file_size, _prot, MAP_PRIVATE, _fd);
     close(_fd);
     if (_page == NULL) {
+        syslog(LOG_ERR, "is not a lot memory %s\n", _file_name);
         return NULL;
     }
     *_buffer = add_page_to_buffer(*_buffer, _page);
